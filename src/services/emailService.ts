@@ -59,7 +59,26 @@ export const updateTemplate = async (templateId: string, updates: { subject: str
 // --- Email Sending (EmailJS) ---
 
 /**
- * Get subject and message based on the email type
+ * Format date for emails
+ */
+const formatDate = (dateStr: string) => {
+  if (!dateStr) return ''
+  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(dateStr))
+}
+
+/**
+ * Replace variables in template string (tolerant of different formats)
+ */
+const parseTemplate = (text: string, data: EmailData) => {
+  if (!text) return ''
+  return text
+    .replace(/\{+guest_name\}+/gi, data.guest_name || '')
+    .replace(/\{+start_date\}+/gi, formatDate(data.start_date))
+    .replace(/\{+end_date\}+/gi, formatDate(data.end_date))
+}
+
+/**
+ * Get fallback subject and message based on the email type
  */
 const getEmailContent = (type: EmailType) => {
   switch (type) {
@@ -95,7 +114,31 @@ export const sendGuestEmail = async (type: EmailType, data: EmailData) => {
     return
   }
 
-  const { subject, message } = getEmailContent(type)
+  let subject = ''
+  let message = ''
+
+  try {
+    const { data: templateData, error } = await supabase
+      .from('email_templates')
+      .select('subject, body')
+      .eq('key', type)
+      .single()
+
+    if (error || !templateData) {
+      console.warn(`Template ${type} not found in DB or error. Using fallback.`)
+      const fallback = getEmailContent(type)
+      subject = fallback.subject
+      message = fallback.message
+    } else {
+      subject = parseTemplate(templateData.subject, data)
+      message = parseTemplate(templateData.body, data)
+    }
+  } catch (err) {
+    console.error('Error fetching template:', err)
+    const fallback = getEmailContent(type)
+    subject = fallback.subject
+    message = fallback.message
+  }
 
   const templateParams = {
     to_email: data.guest_email, // Main recipient for Guest Email
