@@ -11,6 +11,30 @@ export interface Settings {
   contact_phone: string | null
   system_email?: string | null
   grandfather_email?: string | null
+  
+  // New Homepage Fields
+  hero_tag?: string | null
+  hero_title?: string | null
+  section1_tag?: string | null
+  section1_title?: string | null
+  section1_text?: string | null
+  section2_tag?: string | null
+  section2_title?: string | null
+  section2_text?: string | null
+  section3_tag?: string | null
+  section3_title?: string | null
+  section3_text?: string | null
+  spec1_val?: string | null
+  spec1_label?: string | null
+  spec2_val?: string | null
+  spec2_label?: string | null
+  spec3_val?: string | null
+  spec3_label?: string | null
+  spec4_val?: string | null
+  spec4_label?: string | null
+  contact_title?: string | null
+  contact_subtitle?: string | null
+  contact_details_title?: string | null
 }
 
 export const getSettings = async (): Promise<Settings | null> => {
@@ -43,7 +67,29 @@ export const updateSettings = async (settings: Settings): Promise<void> => {
       contact_email: settings.contact_email,
       contact_phone: settings.contact_phone,
       system_email: settings.system_email,
-      grandfather_email: settings.grandfather_email
+      grandfather_email: settings.grandfather_email,
+      hero_tag: settings.hero_tag,
+      hero_title: settings.hero_title,
+      section1_tag: settings.section1_tag,
+      section1_title: settings.section1_title,
+      section1_text: settings.section1_text,
+      section2_tag: settings.section2_tag,
+      section2_title: settings.section2_title,
+      section2_text: settings.section2_text,
+      section3_tag: settings.section3_tag,
+      section3_title: settings.section3_title,
+      section3_text: settings.section3_text,
+      spec1_val: settings.spec1_val,
+      spec1_label: settings.spec1_label,
+      spec2_val: settings.spec2_val,
+      spec2_label: settings.spec2_label,
+      spec3_val: settings.spec3_val,
+      spec3_label: settings.spec3_label,
+      spec4_val: settings.spec4_val,
+      spec4_label: settings.spec4_label,
+      contact_title: settings.contact_title,
+      contact_subtitle: settings.contact_subtitle,
+      contact_details_title: settings.contact_details_title
     })
     .eq('id', settings.id)
 

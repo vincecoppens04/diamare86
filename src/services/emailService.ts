@@ -84,23 +84,23 @@ const getEmailContent = (type: EmailType) => {
   switch (type) {
     case 'request_received':
       return {
-        subject: 'Booking Request Received - Diamare86',
-        message: 'We have received your booking request for Diamare86. Our team will review it and get back to you within 24 hours.'
+        subject: 'Booking Request Received - Maurice&Mia',
+        message: 'We have received your booking request for Maurice&Mia. Our team will review it and get back to you within 24 hours.'
       }
     case 'booking_accepted':
       return {
-        subject: 'Booking Confirmed! - Diamare86',
-        message: 'Great news! Your booking request for Diamare86 has been accepted. We look forward to hosting you.'
+        subject: 'Booking Confirmed! - Maurice&Mia',
+        message: 'Great news! Your booking request for Maurice&Mia has been accepted. We look forward to hosting you.'
       }
     case 'booking_refused':
       return {
-        subject: 'Booking Update - Diamare86',
-        message: 'Thank you for your interest in Diamare86. Unfortunately, the dates you requested are no longer available for booking.'
+        subject: 'Booking Update - Maurice&Mia',
+        message: 'Thank you for your interest in Maurice&Mia. Unfortunately, the dates you requested are no longer available for booking.'
       }
     default:
       return {
         subject: 'Update regarding your stay',
-        message: 'There has been an update regarding your booking at Diamare86.'
+        message: 'There has been an update regarding your booking at Maurice&Mia.'
       }
   }
 }
@@ -185,16 +185,17 @@ export const sendAdminNotification = async (data: EmailData) => {
   }
 
   try {
-    // Fetch the admin contact email from settings
+    // Fetch the admin contact/system email from settings
     const { data: settings, error: settingsError } = await supabase
       .from('settings')
-      .select('contact_email')
+      .select('system_email, contact_email')
       .single()
 
     if (settingsError) {
-      console.error('EmailJS Admin Error: Could not fetch contact_email from settings', settingsError)
+      console.error('EmailJS Admin Error: Could not fetch emails from settings', settingsError)
     } else {
-      adminParams.to_email = settings.contact_email || ''
+      // Use system_email if configured, otherwise fallback to contact_email
+      adminParams.to_email = settings.system_email || settings.contact_email || ''
     }
 
     console.log('EmailJS Sending to ADMIN:', adminParams)

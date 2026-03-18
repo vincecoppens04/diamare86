@@ -1,8 +1,8 @@
 <template>
   <div class="booking-form-container glass-panel">
     <div class="form-header">
-      <h2>Request a <span class="text-gradient">Booking</span></h2>
-      <p>Fill in your details and we'll get back to you within 24 hours.</p>
+      <h2>Vraag een <span class="text-gradient">Boeking</span> aan</h2>
+      <p>Vul uw gegevens in en wij nemen binnen 24 uur contact met u op.</p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="booking-form">
@@ -20,39 +20,39 @@
       </div>
 
       <div class="form-group">
-        <label for="name">Name <span class="required">*</span></label>
-        <input class="neo-input" type="text" id="name" v-model="form.guest_name" required placeholder="Your full name" />
+        <label for="name">Naam <span class="required">*</span></label>
+        <input class="neo-input" type="text" id="name" v-model="form.guest_name" required placeholder="Uw volledige naam" />
       </div>
 
       <div class="form-group">
-        <label for="email">Email <span class="required">*</span></label>
-        <input class="neo-input" type="email" id="email" v-model="form.guest_email" required placeholder="you@example.com" />
+        <label for="email">E-mailadres <span class="required">*</span></label>
+        <input class="neo-input" type="email" id="email" v-model="form.guest_email" required placeholder="u@voorbeeld.nl" />
       </div>
 
       <div class="form-group">
-        <label for="phone">Phone</label>
-        <input class="neo-input" type="tel" id="phone" v-model="form.guest_phone" placeholder="Optional" />
+        <label for="phone">Telefoonnummer</label>
+        <input class="neo-input" type="tel" id="phone" v-model="form.guest_phone" placeholder="Optioneel" />
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="startDate">Check-in <span class="required">*</span></label>
+          <label for="startDate">Aankomst <span class="required">*</span></label>
           <input class="neo-input" type="date" id="startDate" v-model="form.start_date" required />
         </div>
         <div class="form-group">
-          <label for="endDate">Check-out <span class="required">*</span></label>
+          <label for="endDate">Vertrek <span class="required">*</span></label>
           <input class="neo-input" type="date" id="endDate" v-model="form.end_date" required />
         </div>
       </div>
 
       <div class="form-group">
-        <label for="message">Message</label>
-        <textarea class="neo-input" id="message" v-model="form.message" rows="4" placeholder="Any special requests or questions?"></textarea>
+        <label for="message">Bericht</label>
+        <textarea class="neo-input" id="message" v-model="form.message" rows="4" placeholder="Heeft u speciale verzoeken of vragen?"></textarea>
       </div>
 
       <button type="submit" :disabled="isSubmitting" class="neo-btn neo-btn-primary submit-btn">
         <span v-if="isSubmitting" class="btn-spinner"></span>
-        {{ isSubmitting ? 'Submitting...' : 'Submit Request' }}
+        {{ isSubmitting ? 'Versturen...' : 'Aanvraag Versturen' }}
       </button>
     </form>
   </div>
@@ -80,12 +80,12 @@ const errorMessage = ref('')
 const handleSubmit = async () => {
   // 1. Basic Validation
   if (!form.value.start_date || !form.value.end_date) {
-    errorMessage.value = 'Please select both check-in and check-out dates.'
+    errorMessage.value = 'Selecteer zowel een aankomst- als vertrekdatum.'
     return
   }
 
   if (form.value.start_date > form.value.end_date) {
-    errorMessage.value = 'Check-out date cannot be before check-in date.'
+    errorMessage.value = 'De vertrekdatum mag niet vóór de aankomstdatum liggen.'
     return
   }
 
@@ -97,17 +97,17 @@ const handleSubmit = async () => {
     // 2. Proactive Availability Check
     const availability = await isRangeAvailable(form.value.start_date, form.value.end_date)
     if (!availability.available) {
-      errorMessage.value = `Sorry, these dates are not available. ${availability.conflict}`
+      errorMessage.value = `Sorry, deze data zijn niet beschikbaar. ${availability.conflict}`
       isSubmitting.value = false
       return
     }
 
     // 3. Submit Request
     await createBookingRequest(form.value)
-    successMessage.value = 'Booking request sent. Confirmation email sent.'
+    successMessage.value = 'Boekingsaanvraag verzonden. Bevestigingsmail verstuurd.'
     form.value = { ...initialFormState }
   } catch (error: any) {
-    errorMessage.value = error.message || 'Something went wrong. Please try again.'
+    errorMessage.value = error.message || 'Er is iets misgegaan. Probeer het opnieuw.'
     console.error(error)
   } finally {
     isSubmitting.value = false

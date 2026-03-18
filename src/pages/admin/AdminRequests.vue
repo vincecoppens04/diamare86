@@ -2,14 +2,14 @@
   <div class="requests-page animate-fade-in">
     <header class="page-header">
       <div class="header-content">
-        <h1>Booking <span class="text-gradient">Requests</span></h1>
-        <p>Review and process incoming stay requests for Diamare86.</p>
+        <h1>Boekings<span class="text-gradient">aanvragen</span></h1>
+        <p>Beoordeel en verwerk inkomende verblijfsaanvragen voor Maurice&Mia.</p>
       </div>
     </header>
 
     <div v-if="loading" class="loading-state">
       <div class="spinner"></div>
-      <p>Syncing requests...</p>
+      <p>Aanvragen laden...</p>
     </div>
     <div v-else-if="error" class="alert alert-error">
       <span class="alert-icon">
@@ -33,14 +33,10 @@
         <div class="empty-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted); opacity: 0.5;"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
         </div>
-        <p>No booking requests found in the database.</p>
-        <div class="status-icon info">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12" y1="8" y2="8"/></svg>
-          </div>
-          <div class="status-content">
-            <h3>No Pending Requests</h3>
-            <p>You're all caught up. New booking requests will appear here for your review.</p>
-          </div>
+        <div class="status-content">
+          <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">Geen Openstaande Aanvragen</h3>
+          <p style="color: var(--text-muted); margin: 0;">U bent helemaal bij. Nieuwe boekingsaanvragen verschijnen hier voor beoordeling.</p>
+        </div>
       </div>
       
       <div v-else class="requests-list">
@@ -52,8 +48,8 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
             </div>
             <div class="alert-content">
-              <strong>Dates no longer available!</strong>
-              <p>Another booking has already occupied these dates. You should refuse this request.</p>
+              <strong>Data niet meer beschikbaar!</strong>
+              <p>Een andere boeking heeft deze data al bezet. U dient deze aanvraag te weigeren.</p>
             </div>
           </div>
           
@@ -68,7 +64,7 @@
 
             <div class="request-details">
               <div class="detail-item">
-                <span class="detail-label">Check-in / Out</span>
+                <span class="detail-label">Aankomst / Vertrek</span>
                 <span class="detail-value">{{ formatDate(req.start_date) }} — {{ formatDate(req.end_date) }}</span>
               </div>
               <div class="detail-item">
@@ -82,7 +78,7 @@
             </div>
 
             <div class="request-message" v-if="req.message">
-              <span class="detail-label">Message</span>
+              <span class="detail-label">Bericht</span>
               <p>{{ req.message }}</p>
             </div>
           </div>
@@ -93,17 +89,17 @@
                 <span class="btn-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 </span>
-                Refuse
+                Weigeren
               </button>
               <button class="neo-btn neo-btn-primary accept-btn" @click="openAcceptModal(req)" :disabled="processingId === req.id">
                 <span class="btn-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </span>
-                Accept Request
+                Accepteren
               </button>
             </div>
             <div v-else class="reviewed-info">
-              <span class="reviewed-label">Reviewed on</span>
+              <span class="reviewed-label">Beoordeeld op</span>
               <span class="reviewed-date">{{ formatDate(req.reviewed_at) }}</span>
             </div>
           </div>
@@ -118,13 +114,13 @@
           <div class="success-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3>Accepted!</h3>
-          <p>The booking has been successfully confirmed. Confirmation email sent.</p>
+          <h3>Geaccepteerd!</h3>
+          <p>De boeking is succesvol bevestigd. Bevestigingsmail verstuurd.</p>
         </div>
 
         <div v-else>
         <div class="modal-header">
-            <h3>Accept Request</h3>
+            <h3>Aanvraag Accepteren</h3>
             <button class="close-btn" @click="closeModal">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
             </button>
@@ -139,11 +135,11 @@
 
             <div class="modal-summary">
               <div class="summary-item">
-                <label>Guest</label>
+                <label>Gast</label>
                 <span>{{ selectedRequest.guest_name }}</span>
               </div>
               <div class="summary-item">
-                <label>Period</label>
+                <label>Periode</label>
                 <span>{{ formatDate(selectedRequest.start_date) }} — {{ formatDate(selectedRequest.end_date) }}</span>
               </div>
             </div>
@@ -152,17 +148,17 @@
               <span class="alert-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12" y1="8" y2="8"/></svg>
               </span>
-              <p>Accepting will instantly confirm the booking in the calendar and send a confirmation email to the guest.</p>
+              <p>Accepteren bevestigt de boeking direct in de kalender en stuurt een bevestigingsmail naar de gast.</p>
             </div>
           </div>
           <div class="modal-footer">
-            <button class="neo-btn neo-btn-outline" @click="closeModal" :disabled="processingModal">Cancel</button>
+            <button class="neo-btn neo-btn-outline" @click="closeModal" :disabled="processingModal">Annuleren</button>
             <button class="neo-btn neo-btn-primary" @click="confirmAccept" :disabled="processingModal">
               <span v-if="processingModal" class="btn-spinner"></span>
               <span v-else class="btn-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </span>
-              {{ processingModal ? 'Confirming...' : 'Confirm Acceptance' }}
+              {{ processingModal ? 'Bevestigen...' : 'Acceptatie Bevestigen' }}
             </button>
           </div>
         </div>
@@ -202,7 +198,7 @@ onMounted(fetchRequests)
 
 const formatDate = (isoString: string | null | undefined) => {
   if (!isoString) return ''
-  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(isoString))
+  return new Intl.DateTimeFormat('nl-NL', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(isoString))
 }
 
 const openAcceptModal = (req: BookingRequest) => {
@@ -231,7 +227,7 @@ const confirmAccept = async () => {
     )
     
     if (!availability.available) {
-      error.value = `These dates are no longer available. ${availability.conflict}`
+      error.value = `Deze data zijn niet meer beschikbaar. ${availability.conflict}`
       processingModal.value = false
       return
     }
@@ -239,7 +235,7 @@ const confirmAccept = async () => {
     await acceptBookingRequest(selectedRequest.value)
     
     // Success feedback
-    successMsg.value = 'Booking accepted. Confirmation email sent.'
+    successMsg.value = 'Boeking geaccepteerd. Bevestigingsmail verstuurd.'
     
     // Close modal after a short delay so the user sees the success state if they could
     // But since we want "responsive", we close and show success notification on main page
@@ -257,9 +253,9 @@ const confirmAccept = async () => {
     console.error('Failed to accept request', err)
     const errorMsg = err.message || ''
     if (errorMsg.toLowerCase().includes('overlap') || errorMsg.toLowerCase().includes('conflict') || errorMsg.toLowerCase().includes('unavailable')) {
-      error.value = 'These dates are no longer available'
+      error.value = 'Deze data zijn niet meer beschikbaar'
     } else {
-      error.value = `Failed to accept: ${errorMsg || 'Unknown system error'}`
+      error.value = `Accepteren mislukt: ${errorMsg || 'Onbekende systeemfout'}`
     }
   } finally {
     processingModal.value = false
@@ -267,18 +263,18 @@ const confirmAccept = async () => {
 }
 
 const handleRefuse = async (req: BookingRequest) => {
-  if (!confirm('Are you sure you want to refuse this request?')) return
+  if (!confirm('Weet u zeker dat u deze aanvraag wilt weigeren?')) return
   
   const id = req.id
   processingId.value = id
   try {
     await refuseBookingRequest(req)
-    successMsg.value = 'Booking refused.'
+    successMsg.value = 'Boeking geweigerd.'
     fetchRequests(false)
     setTimeout(() => { successMsg.value = '' }, 3000)
   } catch (err) {
     console.error('Failed to refuse request', err)
-    alert('Failed to refuse request.')
+    alert('Weigeren aanvraag mislukt.')
   } finally {
     processingId.value = null
   }

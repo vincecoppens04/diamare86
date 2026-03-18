@@ -8,13 +8,11 @@
     <div class="login-card glass-panel animate-fade-in">
       <div class="header">
         <div class="logo">
-          <span class="logo-icon">
-             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41L13.7 2.71a2.41 2.41 0 0 0-3.41 0z"/></svg>
-          </span>
+          <img src="@/assets/diamare_logo.png" alt="Diamare86 Logo" class="logo-img" />
           <span class="logo-text">Admin<span class="text-gradient">Core</span></span>
         </div>
-        <h1>Welcome Back</h1>
-        <p>Authorize access to the Diamare86 management suite</p>
+        <h1>Welkom Terug</h1>
+        <p>Log in om toegang te krijgen tot het Maurice&Mia beheerpaneel</p>
       </div>
 
       <form @submit.prevent="handleLogin" class="login-form">
@@ -26,7 +24,7 @@
         </div>
 
         <div class="form-group">
-          <label for="email">Admin Email</label>
+          <label for="email">Beheerders E-mail</label>
           <input 
             class="neo-input"
             type="email" 
@@ -40,9 +38,9 @@
 
         <div class="form-group">
           <div class="label-row">
-            <label for="password">Security Key</label>
+            <label for="password">Wachtwoord</label>
             <button type="button" class="forgot-link" @click="handleForgotPassword" :disabled="loading || resetSent">
-              Forgot password?
+              Wachtwoord vergeten?
             </button>
           </div>
           <input 
@@ -60,19 +58,19 @@
           <span class="alert-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </span>
-          Password reset email sent. Please check your inbox.
+          E-mail voor wachtwoordherstel verzonden. Controleer uw mailbox.
         </div>
 
         <button type="submit" class="neo-btn neo-btn-primary submit-btn" :disabled="loading">
           <span v-if="loading" class="btn-spinner"></span>
-          {{ loading ? 'Authenticating...' : 'Sign In' }}
+          {{ loading ? 'Inloggen...' : 'Inloggen' }}
         </button>
       </form>
 
       <div class="back-link">
         <router-link to="/">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:middle; margin-right:4px;"><path d="m15 18-6-6 6-6"/></svg>
-          Return to public site
+          Terug naar website
         </router-link>
       </div>
     </div>
@@ -108,7 +106,7 @@ const handleLogin = async () => {
     }
   } catch (err) {
     console.error('Login exception:', err)
-    errorMsg.value = 'An unexpected error occurred during login.'
+    errorMsg.value = 'Er is een onverwachte fout opgetreden tijdens het inloggen.'
   } finally {
     loading.value = false
   }
@@ -116,7 +114,7 @@ const handleLogin = async () => {
 
 const handleForgotPassword = async () => {
   if (!email.value) {
-    errorMsg.value = 'Please enter your admin email first.'
+    errorMsg.value = 'Vul eerst uw beheerders e-mail in.'
     return
   }
 
@@ -135,7 +133,7 @@ const handleForgotPassword = async () => {
     }
   } catch (err) {
     console.error('Reset password request exception:', err)
-    errorMsg.value = 'Failed to send reset email.'
+    errorMsg.value = 'Verzenden van herstel e-mail mislukt.'
   } finally {
     loading.value = false
   }
@@ -171,7 +169,7 @@ const handleForgotPassword = async () => {
 
 .header { text-align: center; margin-bottom: 3rem; }
 .logo { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2.5rem; }
-.logo-icon { font-size: 2rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.logo-img { height: 40px; width: auto; }
 .logo-text { font-family: var(--font-heading); font-weight: 800; font-size: 1.6rem; color: var(--text-primary); letter-spacing: -0.02em; }
 
 .header h1 { margin: 0 0 0.75rem 0; font-size: 2rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; }

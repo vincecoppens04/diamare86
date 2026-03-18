@@ -2,26 +2,26 @@
   <div class="dashboard-page animate-fade-in">
     <header class="page-header">
       <div class="header-content">
-        <h1>Admin <span class="text-gradient">Hub</span></h1>
-        <p>Immediate actions and operational overview.</p>
+        <h1>Beheer <span class="text-gradient">Hub</span></h1>
+        <p>Directe acties en operationeel overzicht.</p>
       </div>
       <div class="header-date">
-        {{ new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) }}
+        {{ new Date().toLocaleDateString('nl-NL', { weekday: 'long', month: 'long', day: 'numeric' }) }}
       </div>
     </header>
 
     <div v-if="loading" class="loading-state">
       <div class="spinner"></div>
-      <p>Syncing dashboard...</p>
+      <p>Dashboard laden...</p>
     </div>
     
     <div v-else-if="error" class="error-panel glass-panel">
       <div class="error-icon-lg">
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
       </div>
-      <h3>Dashboard data unavailable</h3>
-      <p>We're having trouble reaching the database. Please try again in a moment.</p>
-      <button @click="fetchMetrics" class="neo-btn neo-btn-outline mt-4">Retry Sync</button>
+      <h3>Dashboardgegevens niet beschikbaar</h3>
+      <p>We kunnen de database niet bereiken. Probeer het over een moment opnieuw.</p>
+      <button @click="fetchMetrics" class="neo-btn neo-btn-outline mt-4">Opnieuw proberen</button>
     </div>
     
     <div v-else class="dashboard-content">
@@ -30,11 +30,11 @@
         <!-- Pending Requests (Most Important) -->
         <router-link to="/admin/requests" class="metric-card glass-panel glass-panel-hover highlight-pending">
           <div class="metric-info">
-            <span class="metric-label">Review Actions</span>
-            <h2 class="metric-value">Pending Requests: {{ pendingCount }}</h2>
+            <span class="metric-label">Acties Vereist</span>
+            <h2 class="metric-value">Openstaande Aanvragen: {{ pendingCount }}</h2>
           </div>
           <div class="metric-action-hint">
-            View Requests
+            Bekijk Aanvragen
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px;"><path d="m9 18 6-6-6-6"/></svg>
           </div>
         </router-link>
@@ -42,7 +42,7 @@
         <!-- Next Booking -->
         <div class="metric-card glass-panel">
           <div class="metric-info">
-            <span class="metric-label">Next Arrival</span>
+            <span class="metric-label">Volgende Aankomst</span>
             <div v-if="nextBooking" class="next-booking-details">
               <h2 class="guest-name">{{ nextBooking.guest_name }}</h2>
               <p class="stay-period">
@@ -50,26 +50,26 @@
               </p>
             </div>
             <div v-else class="no-upcoming">
-              <p>No upcoming bookings scheduled.</p>
+              <p>Geen aankomende boekingen gepland.</p>
             </div>
           </div>
           <div class="metric-sub">
-            <span class="badge">{{ upcomingCount }} upcoming stays total</span>
+            <span class="badge">totaal {{ upcomingCount }} aankomende verblijven</span>
           </div>
         </div>
       </div>
 
       <!-- Quick Navigation -->
       <section class="nav-section">
-        <h3 class="section-label">Quick Navigation</h3>
+        <h3 class="section-label">Snelle Navigatie</h3>
         <div class="nav-grid">
           <router-link to="/admin/requests" class="nav-card glass-panel glass-panel-hover">
             <span class="nav-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5C2 7 4 5 6.5 5H18c2.2 0 4 1.8 4 4v8Z"/><path d="m22 7-7.1 3.78c-.54.29-1.28.29-1.82 0L6 7"/></svg>
             </span>
             <div class="nav-text">
-              <strong>Requests</strong>
-              <span>Approve stays</span>
+              <strong>Aanvragen</strong>
+              <span>Verblijven goedkeuren</span>
             </div>
           </router-link>
           
@@ -78,8 +78,8 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
             </span>
             <div class="nav-text">
-              <strong>Calendar</strong>
-              <span>Manage dates</span>
+              <strong>Kalender</strong>
+              <span>Data beheren</span>
             </div>
           </router-link>
           
@@ -88,8 +88,8 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
             </span>
             <div class="nav-text">
-              <strong>Settings</strong>
-              <span>Prices & Content</span>
+              <strong>Instellingen</strong>
+              <span>Prijzen & Inhoud</span>
             </div>
           </router-link>
           
@@ -98,8 +98,8 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
             </span>
             <div class="nav-text">
-              <strong>Emails</strong>
-              <span>Edit templates</span>
+              <strong>E-mails</strong>
+              <span>Sjablonen bewerken</span>
             </div>
           </router-link>
         </div>
@@ -126,7 +126,7 @@ const loading = ref(true)
 const error = ref(false)
 
 const formatDate = (dateStr: string) => {
-  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(new Date(dateStr))
+  return new Intl.DateTimeFormat('nl-NL', { month: 'short', day: 'numeric' }).format(new Date(dateStr))
 }
 
 const fetchMetrics = async () => {

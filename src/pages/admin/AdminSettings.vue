@@ -2,14 +2,14 @@
   <div class="admin-settings-page animate-fade-in">
     <header class="page-header">
       <div class="header-content">
-        <h1>Global <span class="text-gradient">Settings</span></h1>
-        <p>Configure public metadata, pricing, and system variables for Diamare86.</p>
+        <h1>Algemene <span class="text-gradient">Instellingen</span></h1>
+        <p>Configureer openbare metadata, prijzen en systeemvariabelen voor Maurice&Mia.</p>
       </div>
     </header>
 
     <div v-if="loading" class="loading-state">
       <div class="spinner"></div>
-      <p>Syncing settings...</p>
+      <p>Instellingen laden...</p>
     </div>
     <div v-else-if="errorMsg" class="alert alert-error">
       <span class="alert-icon">
@@ -21,45 +21,180 @@
     <div v-else-if="form" class="settings-grid">
       <form @submit.prevent="handleSave" class="settings-form">
         
-        <!-- Pricing Section -->
+        <!-- Homepage Content Section -->
+        <section class="settings-card glass-panel">
+          <div class="card-header">
+            <span class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg>
+            </span>
+            <h2>Homepage Hero & Intro</h2>
+          </div>
+          <p class="card-desc">Beheer de tekst in de bovenste sectie van de website.</p>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="hero_tag">Hero Label (Small)</label>
+              <input class="neo-input" type="text" id="hero_tag" v-model="form.hero_tag" placeholder="bijv. AI-Powered Experience" />
+            </div>
+            <div class="form-group">
+              <label for="hero_title">Hero Titel (Headline)</label>
+              <input class="neo-input" type="text" id="hero_title" v-model="form.hero_title" placeholder="bijv. Puur Minimalisme" />
+              <span class="help-text">Gebruik HTML voor gradients: &lt;span class='text-gradient'&gt;Tekst&lt;/span&gt;</span>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top: 1.5rem;">
+            <label for="apartment_description">Introductie Paragraaf</label>
+            <textarea class="neo-input" id="apartment_description" v-model="form.apartment_description" rows="4"></textarea>
+          </div>
+        </section>
+
+        <!-- Storytelling Sections -->
+        <section class="settings-card glass-panel">
+          <div class="card-header">
+            <span class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>
+            </span>
+            <h2>Storytelling Secties</h2>
+          </div>
+          <p class="card-desc">Beheer de drie tekst/afbeelding blokken op de homepage.</p>
+
+          <!-- Section 1 -->
+          <div class="content-group">
+            <h3>Sectie 1 (Boven)</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Label</label>
+                <input class="neo-input" type="text" v-model="form.section1_tag" />
+              </div>
+              <div class="form-group">
+                <label>Titel</label>
+                <input class="neo-input" type="text" v-model="form.section1_title" />
+              </div>
+            </div>
+            <div class="form-group" style="margin-top: 1rem;">
+              <label>Tekst</label>
+              <textarea class="neo-input" v-model="form.section1_text" rows="3"></textarea>
+            </div>
+          </div>
+
+          <!-- Section 2 -->
+          <div class="content-group" style="margin-top: 3rem; padding-top: 3rem; border-top: 1px solid var(--surface-border);">
+            <h3>Sectie 2 (Midden)</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Label</label>
+                <input class="neo-input" type="text" v-model="form.section2_tag" />
+              </div>
+              <div class="form-group">
+                <label>Titel</label>
+                <input class="neo-input" type="text" v-model="form.section2_title" />
+              </div>
+            </div>
+            <div class="form-group" style="margin-top: 1rem;">
+              <label>Tekst</label>
+              <textarea class="neo-input" v-model="form.section2_text" rows="3"></textarea>
+            </div>
+          </div>
+
+          <!-- Section 3 -->
+          <div class="content-group" style="margin-top: 3rem; padding-top: 3rem; border-top: 1px solid var(--surface-border);">
+            <h3>Sectie 3 (Onder)</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Label</label>
+                <input class="neo-input" type="text" v-model="form.section3_tag" />
+              </div>
+              <div class="form-group">
+                <label>Titel</label>
+                <input class="neo-input" type="text" v-model="form.section3_title" />
+              </div>
+            </div>
+            <div class="form-group" style="margin-top: 1rem;">
+              <label>Tekst</label>
+              <textarea class="neo-input" v-model="form.section3_text" rows="3"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Specifications Section -->
+        <section class="settings-card glass-panel">
+          <div class="card-header">
+            <span class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+            </span>
+            <h2>Specificaties kaarten</h2>
+          </div>
+          <p class="card-desc">Beheer de 4 kaarten met appartement details.</p>
+
+          <div class="specs-admin-grid">
+            <div class="spec-form-group">
+              <label>Kaart 1 (Grootte)</label>
+              <input class="neo-input" type="text" v-model="form.spec1_val" placeholder="85 m²" />
+              <input class="neo-input" type="text" v-model="form.spec1_label" placeholder="Beschrijving..." />
+            </div>
+            <div class="spec-form-group">
+              <label>Kaart 2 (Slaapkamers)</label>
+              <input class="neo-input" type="text" v-model="form.spec2_val" placeholder="3 Slaapkamers" />
+              <input class="neo-input" type="text" v-model="form.spec2_label" placeholder="Beschrijving..." />
+            </div>
+            <div class="spec-form-group">
+              <label>Kaart 3 (Luxe)</label>
+              <input class="neo-input" type="text" v-model="form.spec3_val" placeholder="Modern" />
+              <input class="neo-input" type="text" v-model="form.spec3_label" placeholder="Beschrijving..." />
+            </div>
+            <div class="spec-form-group">
+              <label>Kaart 4 (Locatie)</label>
+              <input class="neo-input" type="text" v-model="form.spec4_val" placeholder="7e Etage" />
+              <input class="neo-input" type="text" v-model="form.spec4_label" placeholder="Beschrijving..." />
+            </div>
+          </div>
+        </section>
+
+        <!-- Contact CTA Section -->
+        <section class="settings-card glass-panel">
+          <div class="card-header">
+            <span class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </span>
+            <h2>Call-To-Action & Footer</h2>
+          </div>
+          <p class="card-desc">Beheer de tekst in de contact sectie onderaan.</p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contact_title">CTA Titel</label>
+              <input class="neo-input" type="text" id="contact_title" v-model="form.contact_title" />
+            </div>
+            <div class="form-group">
+              <label for="contact_subtitle">CTA Subtitel</label>
+              <input class="neo-input" type="text" id="contact_subtitle" v-model="form.contact_subtitle" />
+            </div>
+          </div>
+          <div class="form-group" style="margin-top: 1.5rem;">
+            <label for="contact_details_title">Titel Contactgegevens</label>
+            <input class="neo-input" type="text" id="contact_details_title" v-model="form.contact_details_title" />
+          </div>
+        </section>
+
+        <!-- Existing Pricing Section -->
         <section class="settings-card glass-panel">
           <div class="card-header">
             <span class="card-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg>
             </span>
-            <h2>Pricing Configuration</h2>
+            <h2>Prijsconfiguratie</h2>
           </div>
-          <p class="card-desc">Set the standard rates for various booking types.</p>
+          <p class="card-desc">Stel de standaardtarieven in voor boekingstypes.</p>
           
           <div class="form-row">
             <div class="form-group">
-              <label for="week_price">Standard Week Rate (€)</label>
+              <label for="week_price">Standaard Weektarief (€)</label>
               <input class="neo-input" type="number" id="week_price" v-model.number="form.week_price" min="0" />
             </div>
             <div class="form-group">
-              <label for="weekend_price">Weekend Premium Rate (€)</label>
+              <label for="weekend_price">Weekendtarief (€)</label>
               <input class="neo-input" type="number" id="weekend_price" v-model.number="form.weekend_price" min="0" />
             </div>
-          </div>
-        </section>
-
-        <!-- Public Content Section -->
-        <section class="settings-card glass-panel">
-          <div class="card-header">
-            <span class="card-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>
-            </span>
-            <h2>Public Display Content</h2>
-          </div>
-          <p class="card-desc">Information visible to guests on the landing page.</p>
-
-          <div class="form-group">
-            <label for="apartment_description">Apartment Narrative</label>
-            <textarea class="neo-input" id="apartment_description" v-model="form.apartment_description" rows="5"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="booking_text">Booking Flow Call-to-Action</label>
-            <textarea class="neo-input" id="booking_text" v-model="form.booking_text" rows="2"></textarea>
           </div>
         </section>
 
@@ -69,25 +204,25 @@
             <span class="card-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </span>
-            <h2>Contact & Support</h2>
+            <h2>Contact & Ondersteuning</h2>
           </div>
-          <p class="card-desc">Secondary contact details provided to customers.</p>
+          <p class="card-desc">Secundaire contactgegevens voor klanten.</p>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="contact_name">Ownership Name</label>
+              <label for="contact_name">Naam Eigenaar</label>
               <input class="neo-input" type="text" id="contact_name" v-model="form.contact_name" />
             </div>
             <div class="form-group">
-              <label for="contact_phone">Direct Phone Line</label>
+              <label for="contact_phone">Telefoonnummer</label>
               <input class="neo-input" type="tel" id="contact_phone" v-model="form.contact_phone" />
             </div>
           </div>
           <div class="form-group email-group">
-            <label for="contact_email">Public Email Access</label>
+            <label for="contact_email">Openbaar E-mailadres</label>
             <div class="input-with-help">
               <input class="neo-input" type="email" id="contact_email" v-model="form.contact_email" />
-              <span class="help-text">This address is visible to all site visitors.</span>
+              <span class="help-text">Dit adres is zichtbaar voor alle websitebezoekers.</span>
             </div>
           </div>
         </section>
@@ -98,15 +233,15 @@
             <span class="card-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </span>
-            <h2>Internal Systems</h2>
+            <h2>Interne Systemen</h2>
           </div>
-          <p class="card-desc">Backend configurations and automation variables.</p>
+          <p class="card-desc">Backend-configuraties en automatiseringsvariabelen.</p>
 
           <div class="form-group email-group">
-            <label for="system_email">System Dispatch Address</label>
+            <label for="system_email">Ontvangst E-mailadres Meldingen</label>
             <div class="input-with-help">
               <input class="neo-input" type="email" id="system_email" v-model="form.system_email" />
-              <span class="help-text">Used for outgoing automated notifications.</span>
+              <span class="help-text">E-mailadres waarop u meldingen van nieuwe boekingsaanvragen ontvangt.</span>
             </div>
           </div>
         </section>
@@ -119,12 +254,12 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               </span> {{ successMsg }}
             </span>
-            <span v-else class="status-tip">Unsaved changes will be lost</span>
+            <span v-else class="status-tip">Niet-opgeslagen wijzigingen gaan verloren</span>
           </div>
           <div class="action-buttons">
             <button type="submit" class="neo-btn neo-btn-primary save-btn" :disabled="saving">
               <span v-if="saving" class="btn-spinner"></span>
-              {{ saving ? 'Syncing...' : 'Publish Changes' }}
+              {{ saving ? 'Opslaan...' : 'Wijzigingen Publiceren' }}
             </button>
           </div>
         </div>
@@ -150,11 +285,11 @@ onMounted(async () => {
     if (data) {
       form.value = { ...data }
     } else {
-      errorMsg.value = 'Failed to load settings from Supabase.'
+      errorMsg.value = 'Laden van instellingen mislukt.'
     }
   } catch (err) {
     console.error(err)
-    errorMsg.value = 'Error fetching settings.'
+    errorMsg.value = 'Fout bij ophalen van instellingen.'
   } finally {
     loading.value = false
   }
@@ -169,14 +304,14 @@ const handleSave = async () => {
   
   try {
     await updateSettings(form.value)
-    successMsg.value = 'Settings updated successfully!'
+    successMsg.value = 'Instellingen succesvol bijgewerkt!'
     
     setTimeout(() => {
       successMsg.value = ''
     }, 4000)
   } catch (err) {
     console.error(err)
-    errorMsg.value = 'Failed to update system settings.'
+    errorMsg.value = 'Bijwerken van systeeminstellingen mislukt.'
   } finally {
     saving.value = false
   }
@@ -185,7 +320,37 @@ const handleSave = async () => {
 
 <style scoped>
 .admin-settings-page {
-  /* No local overrides for background/text - rely on global :root */
+  padding-bottom: 10rem;
+}
+
+.content-group h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem 0;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.specs-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+.spec-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background: var(--surface-background);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+}
+
+.spec-form-group label {
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
 }
 
 .page-header {

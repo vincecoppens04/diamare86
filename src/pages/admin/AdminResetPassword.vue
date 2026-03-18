@@ -8,13 +8,11 @@
     <div class="login-card glass-panel animate-fade-in">
       <div class="header">
         <div class="logo">
-          <span class="logo-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41L13.7 2.71a2.41 2.41 0 0 0-3.41 0z"/></svg>
-          </span>
+          <img src="@/assets/diamare_logo.png" alt="Diamare86 Logo" class="logo-img" />
           <span class="logo-text">Admin<span class="text-gradient">Core</span></span>
         </div>
-        <h1>Reset Password</h1>
-        <p>Enter your new security key for the management suite</p>
+        <h1>Wachtwoord Herstellen</h1>
+        <p>Voer uw nieuwe beveiligingssleutel in voor het beheerpaneel</p>
       </div>
 
       <form v-if="!success" @submit.prevent="handleResetPassword" class="login-form">
@@ -26,7 +24,7 @@
         </div>
 
         <div class="form-group">
-          <label for="password">New Password</label>
+          <label for="password">Nieuw Wachtwoord</label>
           <input 
             class="neo-input"
             type="password" 
@@ -39,7 +37,7 @@
         </div>
 
         <div class="form-group">
-          <label for="confirm">Confirm Password</label>
+          <label for="confirm">Bevestig Wachtwoord</label>
           <input 
             class="neo-input"
             type="password" 
@@ -53,7 +51,7 @@
 
         <button type="submit" class="neo-btn neo-btn-primary submit-btn" :disabled="loading">
           <span v-if="loading" class="btn-spinner"></span>
-          {{ loading ? 'Updating...' : 'Set New Password' }}
+          {{ loading ? 'Bijwerken...' : 'Nieuw Wachtwoord Instellen' }}
         </button>
       </form>
 
@@ -61,17 +59,17 @@
         <div class="success-icon">
            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <h2>Password Updated</h2>
-        <p>Your security key has been changed successfully. You can now use it to sign in.</p>
+        <h2>Wachtwoord Bijgewerkt</h2>
+        <p>Uw beveiligingssleutel is succesvol gewijzigd. U kunt deze nu gebruiken om in te loggen.</p>
         <router-link to="/admin/login" class="neo-btn neo-btn-primary return-btn">
-          Back to Login
+          Terug naar Inloggen
         </router-link>
       </div>
 
       <div v-if="!success" class="back-link">
         <router-link to="/admin/login">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:middle; margin-right:4px;"><path d="m15 18-6-6 6-6"/></svg>
-          Back to Login
+          Terug naar Inloggen
         </router-link>
       </div>
     </div>
@@ -90,7 +88,7 @@ const success = ref(false)
 
 const handleResetPassword = async () => {
   if (newPassword.value !== confirmPassword.value) {
-    errorMsg.value = 'Passwords do not match.'
+    errorMsg.value = 'Wachtwoorden komen niet overeen.'
     return
   }
 
@@ -109,7 +107,7 @@ const handleResetPassword = async () => {
     }
   } catch (err) {
     console.error('Reset password exception:', err)
-    errorMsg.value = 'An unexpected error occurred.'
+    errorMsg.value = 'Er is een onverwachte fout opgetreden.'
   } finally {
     loading.value = false
   }
@@ -151,7 +149,7 @@ const handleResetPassword = async () => {
 
 .header { text-align: center; margin-bottom: 3rem; }
 .logo { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2.5rem; }
-.logo-icon { font-size: 2rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.logo-img { height: 40px; width: auto; }
 .logo-text { font-family: var(--font-heading); font-weight: 800; font-size: 1.6rem; color: var(--text-primary); letter-spacing: -0.02em; }
 
 .header h1 { margin: 0 0 0.75rem 0; font-size: 2rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; }

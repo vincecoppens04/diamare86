@@ -3,15 +3,15 @@
     <header class="page-header">
       <div class="header-content">
         <div class="header-text">
-          <h1>Calendar - <span class="text-gradient">Bookings</span></h1>
-          <p>Full control over stays, blocked dates, and stay history.</p>
+          <h1>Kalender - <span class="text-gradient">Boekingen</span></h1>
+          <p>Volledige controle over verblijven, geblokkeerde data en verblijfshistorie.</p>
         </div>
         <div class="header-actions">
           <button class="neo-btn neo-btn-primary" @click="showBlockModal = true">
             <span class="btn-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </span> 
-            Block Dates
+            Data Blokkeren
           </button>
         </div>
       </div>
@@ -32,7 +32,7 @@
     <!-- Main Operational Grid -->
     <div v-if="loading" class="loading-state">
       <div class="spinner"></div>
-      <p>Loading stay records...</p>
+      <p>Verblijfsgegevens laden...</p>
     </div>
 
     <div v-else class="main-operational-grid animate-fade-in">
@@ -50,13 +50,13 @@
       <!-- Upcoming Bookings Sidebar -->
       <aside class="bookings-sidebar glass-panel">
         <div class="sidebar-header">
-          <h2>Upcoming <span class="text-gradient">Bookings</span></h2>
+          <h2>Aankomende <span class="text-gradient">Boekingen</span></h2>
           <span class="count-badge">{{ upcomingBookings.length }}</span>
         </div>
         
         <div class="sidebar-scroll-area">
           <div v-if="upcomingBookings.length === 0" class="empty-list-minimal">
-            <p>No upcoming bookings scheduled.</p>
+            <p>Geen aankomende boekingen gepland.</p>
           </div>
           
           <div v-else class="sidebar-list">
@@ -85,18 +85,18 @@
       <!-- Section: Blocked Periods -->
       <section class="mgmt-section">
         <div class="section-header">
-          <h2>Blocked <span class="text-gradient">Periods</span></h2>
+          <h2>Geblokkeerde <span class="text-gradient">Periodes</span></h2>
           <span class="count-badge warning">{{ blockedPeriods.length }}</span>
         </div>
         
         <div v-if="blockedPeriods.length === 0" class="empty-list glass-panel">
-          <p>No dates are currently blocked.</p>
+          <p>Er zijn momenteel geen data geblokkeerd.</p>
         </div>
         
         <div v-else class="mgmt-grid">
           <div v-for="block in blockedPeriods" :key="block.id" class="mgmt-card glass-panel glass-panel-hover">
             <div class="card-info">
-              <h3>{{ block.reason || 'Blocked Dates' }}</h3>
+              <h3>{{ block.reason || 'Geblokkeerde Data' }}</h3>
               <p class="dates">{{ formatDate(block.start_date) }} — {{ formatDate(block.end_date) }}</p>
             </div>
             <div class="card-actions">
@@ -114,12 +114,12 @@
       <!-- Section: Past Bookings -->
       <section class="mgmt-section">
         <div class="section-header">
-          <h2 class="text-muted">Past <span class="text-muted">Bookings</span></h2>
+          <h2 class="text-muted">Eerdere <span class="text-muted">Boekingen</span></h2>
           <span class="count-badge muted">{{ pastBookings.length }}</span>
         </div>
         
         <div v-if="pastBookings.length === 0" class="empty-list glass-panel muted">
-          <p>No stay history found.</p>
+          <p>Geen verblijfshistorie gevonden.</p>
         </div>
         
         <div v-else class="mgmt-grid history-grid">
@@ -128,7 +128,7 @@
               <h3>{{ booking.guest_name }}</h3>
               <p class="dates">{{ formatDate(booking.start_date) }} — {{ formatDate(booking.end_date) }}</p>
             </div>
-            <div class="card-status">Completed</div>
+            <div class="card-status">Voltooid</div>
           </div>
         </div>
       </section>
@@ -139,7 +139,7 @@
     <div v-if="showBlockModal" class="modal-overlay" @click="closeModal">
       <div class="modal-content glass-panel animate-fade-in" @click.stop>
         <div class="modal-header">
-          <h3>Block Period</h3>
+          <h3>Periode Blokkeren</h3>
           <button class="close-btn" @click="closeModal">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
           </button>
@@ -156,31 +156,31 @@
             
             <div class="form-row">
               <div class="form-group">
-                <label>Check-in</label>
+                <label>Aankomst</label>
                 <input class="neo-input" type="date" v-model="form.start_date" required />
               </div>
               <div class="form-group">
-                <label>Check-out</label>
+                <label>Vertrek</label>
                 <input class="neo-input" type="date" v-model="form.end_date" required />
               </div>
             </div>
 
             <div class="form-group">
-              <label>Block Reason</label>
+              <label>Reden</label>
               <select class="neo-input" v-model="form.reason" required>
-                <option value="" disabled>Select category...</option>
-                <option value="Family">Family / Private Use</option>
-                <option value="Maintenance">Maintenance / Repairs</option>
-                <option value="Closed">Seasonal Closure</option>
+                <option value="" disabled>Selecteer categorie...</option>
+                <option value="Familie / Privégebruik">Familie / Privégebruik</option>
+                <option value="Onderhoud / Reparaties">Onderhoud / Reparaties</option>
+                <option value="Seizoenssluiting">Seizoenssluiting</option>
               </select>
             </div>
           </div>
           
           <div class="modal-footer">
-            <button type="button" class="neo-btn neo-btn-outline" @click="closeModal" :disabled="isSubmitting">Cancel</button>
+            <button type="button" class="neo-btn neo-btn-outline" @click="closeModal" :disabled="isSubmitting">Annuleren</button>
             <button type="submit" class="neo-btn neo-btn-primary" :disabled="isSubmitting">
               <span v-if="isSubmitting" class="btn-spinner"></span>
-              {{ isSubmitting ? 'Saving...' : 'Confirm Block' }}
+              {{ isSubmitting ? 'Opslaan...' : 'Blokkering Bevestigen' }}
             </button>
           </div>
         </form>
@@ -191,7 +191,7 @@
     <div v-if="selectedEvent" class="modal-overlay" @click="closeManageModal">
       <div class="modal-content glass-panel animate-fade-in" @click.stop>
         <div class="modal-header">
-          <h3>Edit {{ selectedEvent.type === 'booking' ? 'Booking' : 'Blocked Period' }}</h3>
+          <h3>Bewerk {{ selectedEvent.type === 'booking' ? 'Boeking' : 'Geblokkeerde Periode' }}</h3>
           <button class="close-btn" @click="closeManageModal">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
           </button>
@@ -206,31 +206,31 @@
           </div>
 
           <div v-if="selectedEvent.type === 'booking'" class="event-summary">
-            <p><strong>Guest:</strong> {{ selectedEvent.details.guest_name }}</p>
+            <p><strong>Gast:</strong> {{ selectedEvent.details.guest_name }}</p>
           </div>
           
           <div class="form-row">
             <div class="form-group">
-              <label>Check-in</label>
+              <label>Aankomst</label>
               <input class="neo-input" type="date" v-model="manageForm.start_date" />
             </div>
             <div class="form-group">
-              <label>Check-out</label>
+              <label>Vertrek</label>
               <input class="neo-input" type="date" v-model="manageForm.end_date" />
             </div>
           </div>
 
           <div v-if="selectedEvent.type === 'blocked'" class="form-group">
-            <label>Reason</label>
+            <label>Reden</label>
             <input class="neo-input" type="text" v-model="manageForm.reason" />
           </div>
         </div>
         
         <div class="modal-footer">
-          <button type="button" class="neo-btn neo-btn-outline" @click="closeManageModal" :disabled="isSubmitting">Cancel</button>
+          <button type="button" class="neo-btn neo-btn-outline" @click="closeManageModal" :disabled="isSubmitting">Annuleren</button>
           <button type="button" class="neo-btn neo-btn-primary" @click="handleUpdateEvent" :disabled="isSubmitting">
             <span v-if="isSubmitting" class="btn-spinner"></span>
-            {{ isSubmitting ? 'Update Entry' : 'Save Changes' }}
+            {{ isSubmitting ? 'Verwerken...' : 'Wijzigingen Opslaan' }}
           </button>
         </div>
       </div>
@@ -243,6 +243,7 @@ import { ref, onMounted } from 'vue'
 import Calendar from '../../components/Calendar.vue'
 import { 
   getBookings, 
+  getPastBookings,
   getBlockedPeriods, 
   createBlockedPeriod, 
   updateBooking, 
@@ -270,13 +271,13 @@ const manageForm = ref({ start_date: '', end_date: '', reason: '' })
 const fetchAll = async () => {
   loading.value = true
   try {
-    const [b, bp] = await Promise.all([getBookings(), getBlockedPeriods()])
+    const [b, pb, bp] = await Promise.all([getBookings(), getPastBookings(), getBlockedPeriods()])
     
     // Sort into upcoming and past
     const todayStr = new Date().toISOString().split('T')[0]
-    upcomingBookings.value = b.filter(x => x.end_date >= todayStr).sort((a,b) => a.start_date.localeCompare(b.start_date))
-    pastBookings.value = b.filter(x => x.end_date < todayStr).sort((a,b) => b.start_date.localeCompare(a.start_date))
-    blockedPeriods.value = bp.sort((a,b) => a.start_date.localeCompare(b.start_date))
+    upcomingBookings.value = b.filter(x => x.start_date >= todayStr)
+    pastBookings.value = pb
+    blockedPeriods.value = bp.filter(x => x.end_date >= todayStr).sort((a,b) => a.start_date.localeCompare(b.start_date))
   } catch (err) {
     console.error('Fetch error:', err)
   } finally {
@@ -287,7 +288,7 @@ const fetchAll = async () => {
 onMounted(fetchAll)
 
 const formatDate = (iso: string) => {
-  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(iso))
+  return new Intl.DateTimeFormat('nl-NL', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(iso))
 }
 
 const handleEventClick = (event: any) => {
@@ -316,7 +317,7 @@ const closeManageModal = () => {
 
 const handleBlockDates = async () => {
   if (form.value.start_date > form.value.end_date) {
-    errorMsg.value = 'Check-out cannot be before check-in.'
+    errorMsg.value = 'De vertrekdatum mag niet vóór de aankomstdatum liggen.'
     return
   }
 
@@ -326,7 +327,7 @@ const handleBlockDates = async () => {
     // Proactive check
     const availability = await isRangeAvailable(form.value.start_date, form.value.end_date)
     if (!availability.available) {
-      errorMsg.value = availability.conflict || 'Dates are already taken.'
+      errorMsg.value = availability.conflict || 'Data zijn al bezet.'
       isSubmitting.value = false
       return
     }
@@ -335,7 +336,7 @@ const handleBlockDates = async () => {
     closeModal()
     fetchAll()
   } catch (err) {
-    errorMsg.value = 'Failed to block dates.'
+    errorMsg.value = 'Blokkeren van data mislukt.'
   } finally {
     isSubmitting.value = false
   }
@@ -345,7 +346,7 @@ const handleUpdateEvent = async () => {
   if (!selectedEvent.value) return
   
   if (manageForm.value.start_date > manageForm.value.end_date) {
-    errorMsg.value = 'Check-out cannot be before check-in.'
+    errorMsg.value = 'De vertrekdatum mag niet vóór de aankomstdatum liggen.'
     return
   }
 
@@ -360,7 +361,7 @@ const handleUpdateEvent = async () => {
     )
     
     if (!availability.available) {
-      errorMsg.value = availability.conflict || 'Dates are no longer available.'
+      errorMsg.value = availability.conflict || 'Deze data zijn niet meer beschikbaar.'
       isSubmitting.value = false
       return
     }
@@ -374,16 +375,16 @@ const handleUpdateEvent = async () => {
       await updateBlockedPeriod(selectedEvent.value.id, manageForm.value)
     }
     closeManageModal()
-    successMsg.value = 'Record updated successfully!'
+    successMsg.value = 'Gegevens succesvol bijgewerkt!'
     setTimeout(() => { successMsg.value = '' }, 3000)
     fetchAll()
   } catch (err: any) {
     console.error('Update failed:', err)
     const msg = err.message || ''
     if (msg.toLowerCase().includes('overlap') || msg.toLowerCase().includes('conflict') || msg.toLowerCase().includes('unavailable')) {
-      errorMsg.value = 'These dates are no longer available.'
+      errorMsg.value = 'Deze data zijn niet meer beschikbaar.'
     } else {
-      errorMsg.value = 'Update failed. Please check your dates.'
+      errorMsg.value = 'Bijwerken mislukt. Controleer de geselecteerde data.'
     }
   } finally {
     isSubmitting.value = false
@@ -391,16 +392,16 @@ const handleUpdateEvent = async () => {
 }
 
 const handleDeleteStay = async (type: string, id: string) => {
-  if (!confirm('Are you sure you want to delete this record?')) return
+  if (!confirm('Weet u zeker dat u deze gegevens wilt verwijderen?')) return
   try {
     if (type === 'booking') await deleteBooking(id)
     else await deleteBlockedPeriod(id)
-    successMsg.value = 'Record deleted successfully.'
+    successMsg.value = 'Gegevens succesvol verwijderd.'
     setTimeout(() => { successMsg.value = '' }, 3000)
     fetchAll()
   } catch (err) {
     console.error(err)
-    errorMsg.value = 'Failed to delete record.'
+    errorMsg.value = 'Verwijderen van gegevens mislukt.'
   }
 }
 </script>
@@ -552,12 +553,30 @@ const handleDeleteStay = async (type: string, id: string) => {
 .count-badge.muted { background: var(--text-muted); }
 
 .mgmt-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.25rem;
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding: 0.5rem 0.5rem 1.5rem 0.5rem;
+  margin: -0.5rem -0.5rem 0 -0.5rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mgmt-grid::-webkit-scrollbar {
+  height: 6px;
+}
+.mgmt-grid::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.03);
+  border-radius: 10px;
+}
+.mgmt-grid::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+  border-radius: 10px;
 }
 
 .mgmt-card {
+  flex: 0 0 320px;
+  scroll-snap-align: start;
   padding: 1.5rem;
   display: flex;
   justify-content: space-between;

@@ -4,10 +4,10 @@
       <div class="cal-title">
         <h2>{{ monthName }} <span class="text-gradient">{{ currentYear }}</span></h2>
         <div class="cal-nav">
-          <button @click="prevMonth" class="nav-btn" aria-label="Previous Month">
+          <button @click="prevMonth" class="nav-btn" aria-label="Vorige Maand">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
           </button>
-          <button @click="nextMonth" class="nav-btn" aria-label="Next Month">
+          <button @click="nextMonth" class="nav-btn" aria-label="Volgende Maand">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
           </button>
         </div>
@@ -15,22 +15,22 @@
       <div class="cal-legend">
         <div class="legend-item">
           <span class="legend-box is-start"></span>
-          <span>Check-in</span>
+          <span>Aankomst</span>
         </div>
         <div class="legend-item">
           <span class="legend-box is-end"></span>
-          <span>Check-out</span>
+          <span>Vertrek</span>
         </div>
         <div class="legend-item">
           <span class="legend-box is-occupied"></span>
-          <span>Occupied</span>
+          <span>Bezet</span>
         </div>
       </div>
     </div>
 
     <div v-if="loading" class="loading-state">
       <div class="spinner"></div>
-      <p>Syncing availability...</p>
+      <p>Beschikbaarheid laden...</p>
     </div>
 
     <div v-else-if="error" class="error-state">
@@ -67,7 +67,7 @@
     </div>
 
     <div v-if="showFooter" class="cal-footer">
-      <p>Select your preferred dates in the booking form below.</p>
+      <p>Selecteer uw gewenste data in het boekingsformulier hieronder.</p>
     </div>
   </div>
 </template>
@@ -87,7 +87,7 @@ const loading = ref(true)
 const error = ref('')
 
 const viewDate = ref(new Date())
-const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const weekDays = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za']
 
 onMounted(async () => {
   try {
@@ -95,7 +95,7 @@ onMounted(async () => {
     bookings.value = b
     blockedPeriods.value = bp
   } catch (err) {
-    error.value = 'Failed to load availability.'
+    error.value = 'Laden van beschikbaarheid mislukt.'
     console.error(err)
   } finally {
     loading.value = false
@@ -103,7 +103,7 @@ onMounted(async () => {
 })
 
 const monthName = computed(() => {
-  return new Intl.DateTimeFormat('en-US', { month: 'long' }).format(viewDate.value)
+  return new Intl.DateTimeFormat('nl-NL', { month: 'long' }).format(viewDate.value)
 })
 
 const currentYear = computed(() => viewDate.value.getFullYear())

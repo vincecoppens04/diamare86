@@ -27,6 +27,21 @@ export const getBookings = async (): Promise<Booking[]> => {
   return data as Booking[]
 }
 
+export const getPastBookings = async (): Promise<Booking[]> => {
+  const today = new Date().toISOString().split('T')[0]
+  const { data, error } = await supabase
+    .from('bookings')
+    .select('id, start_date, end_date, guest_name')
+    .lt('start_date', today)
+    .order('end_date', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching past bookings:', error)
+    return []
+  }
+  return data as Booking[]
+}
+
 export const getBlockedPeriods = async (): Promise<BlockedPeriod[]> => {
   const { data, error } = await supabase
     .from('blocked_periods')
@@ -124,7 +139,7 @@ export const isRangeAvailable = async (start: string, end: string, ignoreId?: st
     
     // Exclusive overlap check to allow adjacent bookings (Changeover)
     if (proposedStart < bEnd && proposedEnd > bStart) {
-      return { available: false, conflict: `Overlaps with booking for ${b.guest_name}` }
+      return { available: false, conflict: `Overlapt met boeking van ${b.guest_name}` }
     }
   }
 
@@ -135,7 +150,7 @@ export const isRangeAvailable = async (start: string, end: string, ignoreId?: st
     const bpEnd = new Date(bp.end_date)
     
     if (proposedStart < bpEnd && proposedEnd > bpStart) {
-      return { available: false, conflict: `Overlaps with blocked period: ${bp.reason || 'Maintenance'}` }
+      return { available: false, conflict: `Overlapt met geblokkeerde periode: ${bp.reason || 'Onderhoud'}` }
     }
   }
 

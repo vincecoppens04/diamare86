@@ -1,9 +1,9 @@
 <template>
   <div class="calendar-page animate-fade-in">
     <header class="page-hero">
-      <span class="hero-tag">Booking</span>
-      <h1>Check Availability & <span class="text-gradient">Book Your Stay</span></h1>
-      <p>View our current calendar and submit a request for your preferred dates.</p>
+      <span class="hero-tag">Boeking</span>
+      <h1>Bekijk Beschikbaarheid & <span class="text-gradient">Boek Uw Verblijf</span></h1>
+      <p>Bekijk onze actuele kalender en dien een aanvraag in voor uw gewenste data.</p>
     </header>
 
     <div class="content-grid">

@@ -2,14 +2,14 @@
   <div class="admin-emails-page animate-fade-in">
     <header class="page-header">
       <div class="header-content">
-        <h1>Email <span class="text-gradient">Templates</span></h1>
-        <p>Customize automated communications sent to Diamare86 guests.</p>
+        <h1>E-mail<span class="text-gradient">sjablonen</span></h1>
+        <p>Pas geautomatiseerde communicatie aan die naar gasten van Maurice&Mia wordt gestuurd.</p>
       </div>
     </header>
 
     <div v-if="loading" class="loading-state">
       <div class="spinner"></div>
-      <p>Syncing templates...</p>
+      <p>Sjablonen laden...</p>
     </div>
     <div v-else-if="errorMsg" class="alert alert-error">
       <span class="alert-icon">
@@ -23,7 +23,7 @@
         <div class="empty-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
         </div>
-        <p>No email templates found in the database.</p>
+        <p>Geen e-mailsjablonen gevonden in de database.</p>
       </div>
 
       <div class="template-grid">
@@ -40,32 +40,32 @@
 
           <form @submit.prevent="handleSave(template)" class="template-form">
             <div class="form-group">
-              <label :for="`subject-${template.id}`">Subject Line</label>
+              <label :for="`subject-${template.id}`">Onderwerp</label>
               <input 
                 class="neo-input"
                 type="text" 
                 :id="`subject-${template.id}`" 
                 v-model="template.subject" 
-                placeholder="Enter subject..."
+                placeholder="Voer onderwerp in..."
                 required 
               />
             </div>
             
             <div class="form-group">
-              <label :for="`body-${template.id}`">Message Content</label>
+              <label :for="`body-${template.id}`">Berichtinhoud</label>
               <textarea 
                 class="neo-input body-editor"
                 :id="`body-${template.id}`" 
                 v-model="template.body" 
                 rows="8" 
-                placeholder="Write template message..."
+                placeholder="Schrijf sjabloonbericht..."
                 required
               ></textarea>
               <div class="variables-hint">
                 <span class="hint-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
                 </span>
-                <p>Use variables: <code>{GUEST_NAME}</code>, <code>{START_DATE}</code>, <code>{END_DATE}</code></p>
+                <p>Gebruik variabelen: <code>{GUEST_NAME}</code>, <code>{START_DATE}</code>, <code>{END_DATE}</code></p>
               </div>
             </div>
 
@@ -73,7 +73,7 @@
               <div class="status-indicator">
                 <span v-if="successMap[template.id]" class="success-pill">
                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:middle; margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg>
-                   Synced
+                   Opgeslagen
                 </span>
               </div>
               <button 
@@ -82,7 +82,7 @@
                 :disabled="savingId === template.id"
               >
                 <span v-if="savingId === template.id" class="btn-spinner"></span>
-                {{ savingId === template.id ? 'Saving...' : 'Publish Template' }}
+                {{ savingId === template.id ? 'Opslaan...' : 'Sjabloon Publiceren' }}
               </button>
             </div>
           </form>
@@ -111,7 +111,7 @@ onMounted(async () => {
     templates.value = allTemplates.filter(t => t.key !== 'prearrival')
   } catch (err) {
     console.error(err)
-    errorMsg.value = 'Failed to load email templates from Supabase.'
+    errorMsg.value = 'Laden van e-mailsjablonen mislukt.'
   } finally {
     loading.value = false
   }
@@ -134,7 +134,7 @@ const handleSave = async (template: EmailTemplate) => {
     
   } catch (err) {
     console.error(err)
-    alert('Failed to save template changes.')
+    alert('Opslaan van sjabloonwijzigingen mislukt.')
   } finally {
     savingId.value = null
   }
