@@ -106,7 +106,9 @@ const successMap = ref<Record<string, boolean>>({})
 onMounted(async () => {
   loading.value = true
   try {
-    templates.value = await getTemplates()
+    const allTemplates = await getTemplates()
+    // Hide 'prearrival' template from the UI but keep it in the backend
+    templates.value = allTemplates.filter(t => t.key !== 'prearrival')
   } catch (err) {
     console.error(err)
     errorMsg.value = 'Failed to load email templates from Supabase.'
