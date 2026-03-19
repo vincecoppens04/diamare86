@@ -32,6 +32,8 @@ export interface Settings {
   spec3_label?: string | null
   spec4_val?: string | null
   spec4_label?: string | null
+  location_val?: string | null
+  location_label?: string | null
   contact_title?: string | null
   contact_subtitle?: string | null
   contact_details_title?: string | null
@@ -93,6 +95,8 @@ export const updateSettings = async (settings: Settings): Promise<void> => {
       spec3_label: settings.spec3_label,
       spec4_val: settings.spec4_val,
       spec4_label: settings.spec4_label,
+      location_val: settings.location_val,
+      location_label: settings.location_label,
       contact_title: settings.contact_title,
     contact_subtitle: settings.contact_subtitle,
     contact_details_title: settings.contact_details_title,

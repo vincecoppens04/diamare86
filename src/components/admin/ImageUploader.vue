@@ -131,26 +131,30 @@ const removeImage = () => {
 <style scoped>
 .image-uploader-container {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
 }
 
 .preview-area {
-  width: 100%;
-  aspect-ratio: 16 / 9;
+  width: 120px;
+  height: 80px;
+  flex-shrink: 0;
   background: var(--surface-background);
-  border: 2px dashed var(--surface-border);
-  border-radius: var(--radius-md);
+  border: 1px dashed var(--surface-border);
+  border-radius: var(--radius-sm);
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
 }
 
 .preview-area.has-image {
-  border-style: solid;
+  border: none;
 }
 
 .image-preview {
@@ -163,11 +167,14 @@ const removeImage = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.25rem;
   color: var(--text-muted);
+  font-size: 0.7rem;
 }
 
 .upload-placeholder svg {
+  width: 16px;
+  height: 16px;
   opacity: 0.5;
 }
 
@@ -175,30 +182,35 @@ const removeImage = () => {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(2px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.5rem;
   color: white;
+  font-size: 0.75rem;
   z-index: 5;
 }
 
 .uploader-actions {
   display: flex;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.uploader-actions button {
-  flex: 1;
+.uploader-actions .neo-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  justify-content: flex-start;
 }
 
 .danger-btn {
-  flex: 0 0 auto !important;
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.05);
   color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.1);
+  padding: 0.5rem !important;
+  width: fit-content;
 }
 
 .danger-btn:hover {

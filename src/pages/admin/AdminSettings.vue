@@ -47,9 +47,8 @@
             <textarea class="neo-input" id="apartment_description" v-model="form.apartment_description" rows="4"></textarea>
           </div>
           <div class="form-group" style="margin-top: 1.5rem;">
-            <label>Hero Achtergrondafbeelding</label>
+            <label>Hoofdfoto (Bovenaan)</label>
             <ImageUploader v-model="form.hero_image_url" storage-path="hero_main" />
-            <p class="help-text">Deze afbeelding verschijnt bovenaan op de homepage.</p>
           </div>
         </section>
 
@@ -81,7 +80,7 @@
               <textarea class="neo-input" v-model="form.section1_text" rows="3"></textarea>
             </div>
             <div class="form-group" style="margin-top: 1.5rem;">
-              <label>Sectie 1 Afbeelding</label>
+              <label>Foto Sectie 1</label>
               <ImageUploader v-model="form.section1_image_url" storage-path="section_1" />
             </div>
           </div>
@@ -104,7 +103,7 @@
               <textarea class="neo-input" v-model="form.section2_text" rows="3"></textarea>
             </div>
             <div class="form-group" style="margin-top: 1.5rem;">
-              <label>Sectie 2 Afbeelding</label>
+              <label>Foto Sectie 2</label>
               <ImageUploader v-model="form.section2_image_url" storage-path="section_2" />
             </div>
           </div>
@@ -127,7 +126,7 @@
               <textarea class="neo-input" v-model="form.section3_text" rows="3"></textarea>
             </div>
             <div class="form-group" style="margin-top: 1.5rem;">
-              <label>Sectie 3 Afbeelding</label>
+              <label>Foto Sectie 3</label>
               <ImageUploader v-model="form.section3_image_url" storage-path="section_3" />
             </div>
           </div>
@@ -160,9 +159,14 @@
               <input class="neo-input" type="text" v-model="form.spec3_label" placeholder="Beschrijving..." />
             </div>
             <div class="spec-form-group">
-              <label>Kaart 4 (Locatie)</label>
+              <label>Kaart 4 (Zuidgericht)</label>
               <input class="neo-input" type="text" v-model="form.spec4_val" placeholder="7e Etage" />
               <input class="neo-input" type="text" v-model="form.spec4_label" placeholder="Beschrijving..." />
+            </div>
+            <div class="spec-form-group">
+              <label>Kaart 5 (Locatie)</label>
+              <input class="neo-input" type="text" v-model="form.location_val" placeholder="Blankenberge" />
+              <input class="neo-input" type="text" v-model="form.location_label" placeholder="Zeedijk 85..." />
             </div>
           </div>
         </section>
@@ -250,9 +254,9 @@
             <span class="card-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </span>
-            <h2>Interne Systemen</h2>
+            <h2>Intern E-mailadres</h2>
           </div>
-          <p class="card-desc">Backend-configuraties en automatiseringsvariabelen.</p>
+          <p class="card-desc">Stel hier het e-mailadres in waarop je meldingen en nieuwe boekingen wilt ontvangen.</p>
 
           <div class="form-group email-group">
             <label for="system_email">Ontvangst E-mailadres Meldingen</label>
