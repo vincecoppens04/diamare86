@@ -139,7 +139,7 @@ export const isRangeAvailable = async (start: string, end: string, ignoreId?: st
     
     // Exclusive overlap check to allow adjacent bookings (Changeover)
     if (proposedStart < bEnd && proposedEnd > bStart) {
-      return { available: false, conflict: `Overlapt met boeking van ${b.guest_name}` }
+      return { available: false, conflict: 'Deze data zijn al bezet.' }
     }
   }
 
@@ -150,7 +150,7 @@ export const isRangeAvailable = async (start: string, end: string, ignoreId?: st
     const bpEnd = new Date(bp.end_date)
     
     if (proposedStart < bpEnd && proposedEnd > bpStart) {
-      return { available: false, conflict: `Overlapt met geblokkeerde periode: ${bp.reason || 'Onderhoud'}` }
+      return { available: false, conflict: 'Deze data zijn niet beschikbaar.' }
     }
   }
 

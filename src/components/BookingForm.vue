@@ -97,7 +97,7 @@ const handleSubmit = async () => {
     // 2. Proactive Availability Check
     const availability = await isRangeAvailable(form.value.start_date, form.value.end_date)
     if (!availability.available) {
-      errorMessage.value = `Sorry, deze data zijn niet beschikbaar. ${availability.conflict}`
+      errorMessage.value = 'Sorry, deze data zijn niet beschikbaar.'
       isSubmitting.value = false
       return
     }

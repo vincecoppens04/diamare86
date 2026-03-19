@@ -227,7 +227,7 @@ const confirmAccept = async () => {
     )
     
     if (!availability.available) {
-      error.value = `Deze data zijn niet meer beschikbaar. ${availability.conflict}`
+      error.value = 'Deze data zijn niet meer beschikbaar.'
       processingModal.value = false
       return
     }
