@@ -4,6 +4,9 @@
       <div class="cal-title">
         <h2>{{ monthName }} <span class="text-gradient">{{ currentYear }}</span></h2>
         <div class="cal-nav">
+          <button @click="goToToday" class="neo-btn neo-btn-outline btn-today" title="Ga naar vandaag">
+            Vandaag
+          </button>
           <button @click="prevMonth" class="nav-btn" aria-label="Vorige Maand">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
           </button>
@@ -114,6 +117,10 @@ const prevMonth = () => {
 
 const nextMonth = () => {
   viewDate.value = new Date(viewDate.value.getFullYear(), viewDate.value.getMonth() + 1, 1)
+}
+
+const goToToday = () => {
+  viewDate.value = new Date()
 }
 
 const emit = defineEmits(['eventClick'])
@@ -263,6 +270,16 @@ const calendarDays = computed(() => {
   border-color: var(--accent-primary);
   color: var(--accent-primary);
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+}
+
+.btn-today {
+  padding: 0 1rem;
+  height: 36px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius-full);
 }
 
 .cal-legend {
