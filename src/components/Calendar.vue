@@ -357,8 +357,8 @@ const calendarDays = computed(() => {
 
 .day-number {
   font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-weight: 800;
+  color: #000;
   z-index: 2;
 }
 
@@ -394,9 +394,7 @@ const calendarDays = computed(() => {
 }
 
 .day-cell.is-occupied .day-number {
-  color: white;
-  font-weight: 800;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  color: #000;
 }
 
 .day-cell.is-start .day-number,

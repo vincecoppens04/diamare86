@@ -149,7 +149,7 @@ const fetchMetrics = async () => {
     const { count: uCount, error: uErr } = await supabase
       .from('bookings')
       .select('*', { count: 'exact', head: true })
-      .gte('end_date', today)
+      .gte('start_date', today)
 
     if (uErr) throw uErr
     upcomingCount.value = uCount || 0

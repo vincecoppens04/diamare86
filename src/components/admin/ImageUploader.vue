@@ -131,21 +131,23 @@ const removeImage = () => {
 <style scoped>
 .image-uploader-container {
   display: flex;
-  align-items: center;
-  gap: 1.5rem;
+  flex-direction: column;
+  gap: 1.25rem;
   background: rgba(255, 255, 255, 0.03);
-  padding: 0.75rem;
-  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
   border: 1px solid var(--surface-border);
+  width: 100%;
 }
 
 .preview-area {
-  width: 120px;
-  height: 80px;
-  flex-shrink: 0;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
   background: var(--surface-background);
-  border: 1px dashed var(--surface-border);
-  border-radius: var(--radius-sm);
+  border: 2px dashed var(--surface-border);
+  border-radius: var(--radius-md);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -154,7 +156,7 @@ const removeImage = () => {
 }
 
 .preview-area.has-image {
-  border: none;
+  border-style: solid;
 }
 
 .image-preview {
@@ -167,14 +169,13 @@ const removeImage = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.75rem;
   color: var(--text-muted);
-  font-size: 0.7rem;
 }
 
 .upload-placeholder svg {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   opacity: 0.5;
 }
 
@@ -182,35 +183,36 @@ const removeImage = () => {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(4px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 1rem;
   color: white;
-  font-size: 0.75rem;
   z-index: 5;
 }
 
 .uploader-actions {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
 }
 
 .uploader-actions .neo-btn {
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
-  justify-content: flex-start;
+  flex: 1;
+  justify-content: center;
 }
 
 .danger-btn {
-  background: rgba(239, 68, 68, 0.05);
+  flex: 0 0 auto !important;
+  background: rgba(239, 68, 68, 0.1);
   color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.1);
-  padding: 0.5rem !important;
-  width: fit-content;
+  border-color: rgba(239, 68, 68, 0.2);
 }
 
 .danger-btn:hover {
