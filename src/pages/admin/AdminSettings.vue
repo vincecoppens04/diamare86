@@ -246,6 +246,33 @@
           </div>
         </section>
 
+        <!-- Data & Backup Section -->
+        <section class="settings-card glass-panel">
+          <div class="card-header">
+            <span class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+            </span>
+            <h2>Data & Beveiliging</h2>
+          </div>
+          <p class="card-desc">Download een volledige kopie van uw database gegevens in CSV-formaat.</p>
+
+          <div class="backup-action">
+            <button 
+              type="button" 
+              class="neo-btn secondary-glow" 
+              @click="handleBackup" 
+              :disabled="isBackingUp"
+              style="width: 100%; justify-content: center; padding: 1.25rem;"
+            >
+              <div v-if="isBackingUp" class="btn-spinner" style="margin-right: 12px;"></div>
+              <span>{{ isBackingUp ? 'Backup voorbereiden...' : 'Download Volledige Backup (.ZIP)' }}</span>
+            </button>
+            <p class="help-text" style="margin-top: 1rem; text-align: center;">
+              Dit downloadt 5 CSV-bestanden (Boekingen, Aanvragen, Geblokkeerde periodes, Instellingen en E-mail templates).
+            </p>
+          </div>
+        </section>
+
         <!-- Sticky Footer -->
         <div class="form-actions-bar glass-panel animate-fade-in">
           <div class="action-status">
@@ -271,10 +298,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getSettings, updateSettings, type Settings } from '../../services/settingsService'
+import { downloadBackup } from '../../services/backupService'
 
 const form = ref<Settings | null>(null)
 const loading = ref(true)
 const saving = ref(false)
+const isBackingUp = ref(false)
 const errorMsg = ref('')
 const successMsg = ref('')
 
@@ -294,6 +323,24 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+const handleBackup = async () => {
+  if (isBackingUp.value) return
+  
+  isBackingUp.value = true
+  errorMsg.value = ''
+  
+  try {
+    await downloadBackup()
+    successMsg.value = 'Backup succesvol gedownload!'
+    setTimeout(() => { successMsg.value = '' }, 4000)
+  } catch (err) {
+    console.error(err)
+    errorMsg.value = 'Backup genereren mislukt. Controleer de console voor details.'
+  } finally {
+    isBackingUp.value = false
+  }
+}
 
 const handleSave = async () => {
   if (!form.value) return
