@@ -32,14 +32,14 @@ export default async function (req: any, res: any) {
   const backupSecret = process.env.BACKUP_SECRET;
   
   const emailjsServiceId = process.env.VITE_EMAILJS_SERVICE_ID;
-  const emailjsTemplateId = process.env.VITE_EMAILJS_TEMPLATE_ADMIN;
+  const emailjsTemplateId = process.env.VITE_EMAILJS_TEMPLATE_GUEST; // Use the guest template (clean message only)
   const emailjsPublicKey = process.env.VITE_EMAILJS_PUBLIC_KEY;
-  const emailjsPrivateKey = process.env.VITE_EMAILJS_PRIVATE_KEY; // Required for strict mode
+  const emailjsPrivateKey = process.env.VITE_EMAILJS_PRIVATE_KEY;
 
   if (!supabaseUrl || !supabaseKey || !backupSecret || !emailjsServiceId || !emailjsTemplateId || !emailjsPublicKey || !emailjsPrivateKey) {
     return res.status(500).json({ 
       success: false, 
-      error: 'Missing environment variables in Vercel (Ensure VITE_EMAILJS_PRIVATE_KEY is set)' 
+      error: 'Missing environment variables in Vercel' 
     });
   }
 
