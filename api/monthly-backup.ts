@@ -97,14 +97,19 @@ export default async function (req: any, res: any) {
         service_id: emailjsServiceId,
         template_id: emailjsTemplateId,
         user_id: emailjsPublicKey,
-        accessToken: emailjsPrivateKey, // Provide the private key to authorize
+        accessToken: emailjsPrivateKey,
         template_params: {
           to_email: systemEmail,
           subject: `📦 Maandelijkse Backup Maurice&Mia (${dateMonth})`,
-          message: 'Bijgesloten vindt u de automatische maandelijkse backup van het Diamare86 boekingssysteem.',
-          attachment: `data:application/zip;base64,${zipBase64}`,
-          attachment_name: `backup-${dateMonth}.zip`
-        }
+          message: 'Bijgesloten vindt u de automatische maandelijkse backup van het Diamare86 boekingssysteem.'
+        },
+        attachments: [
+          {
+            name: `backup-${dateMonth}.zip`,
+            content: zipBase64,
+            base64: true
+          }
+        ]
       })
     });
 
