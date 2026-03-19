@@ -3,7 +3,7 @@
     <div class="mesh-bg"></div>
     <!-- Section 1: Hero -->
     <section class="section-full first-section">
-      <img src="../assets/1.png" alt="" class="img-immersive" />
+      <img :src="getImageUrl(settings?.hero_image_url, '1.png')" alt="" class="img-immersive" />
       <div class="overlay-vignette"></div>
       <div class="content-floating">
         <div class="scroll-reveal">
@@ -22,7 +22,7 @@
     <!-- [Content Sections Remain Same Body] -->
     <section class="section-split">
       <div class="split-image">
-        <img src="../assets/2.png" alt="Architecture" />
+        <img :src="getImageUrl(settings?.section1_image_url, '2.png')" alt="Architecture" />
       </div>
       <div class="split-content">
         <div class="scroll-reveal">
@@ -35,7 +35,7 @@
 
     <section class="section-split split-reverse">
       <div class="split-image">
-        <img src="../assets/3.png" alt="Comfort" />
+        <img :src="getImageUrl(settings?.section2_image_url, '3.png')" alt="Comfort" />
       </div>
       <div class="split-content">
         <div class="scroll-reveal">
@@ -48,7 +48,7 @@
 
     <section class="section-split">
       <div class="split-image">
-        <img src="../assets/4.png" alt="Lifestyle" />
+        <img :src="getImageUrl(settings?.section3_image_url, '4.png')" alt="Lifestyle" />
       </div>
       <div class="split-content">
         <div class="scroll-reveal">
@@ -170,6 +170,13 @@ import { getSettings, type Settings } from '../services/settingsService'
 
 const settings = ref<Settings | null>(null)
 const observer = ref<IntersectionObserver | null>(null)
+
+// Helper to handle dynamic images with local asset fallbacks
+const getImageUrl = (customUrl: string | null | undefined, fallbackName: string) => {
+  if (customUrl) return customUrl
+  // Correctly resolve local asset URL in Vite
+  return new URL(`../assets/${fallbackName}`, import.meta.url).href
+}
 
 onMounted(async () => {
   try {

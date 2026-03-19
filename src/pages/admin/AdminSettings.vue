@@ -46,6 +46,11 @@
             <label for="apartment_description">Introductie Paragraaf</label>
             <textarea class="neo-input" id="apartment_description" v-model="form.apartment_description" rows="4"></textarea>
           </div>
+          <div class="form-group" style="margin-top: 1.5rem;">
+            <label>Hero Achtergrondafbeelding</label>
+            <ImageUploader v-model="form.hero_image_url" storage-path="hero_main" />
+            <p class="help-text">Deze afbeelding verschijnt bovenaan op de homepage.</p>
+          </div>
         </section>
 
         <!-- Storytelling Sections -->
@@ -75,6 +80,10 @@
               <label>Tekst</label>
               <textarea class="neo-input" v-model="form.section1_text" rows="3"></textarea>
             </div>
+            <div class="form-group" style="margin-top: 1.5rem;">
+              <label>Sectie 1 Afbeelding</label>
+              <ImageUploader v-model="form.section1_image_url" storage-path="section_1" />
+            </div>
           </div>
 
           <!-- Section 2 -->
@@ -94,6 +103,10 @@
               <label>Tekst</label>
               <textarea class="neo-input" v-model="form.section2_text" rows="3"></textarea>
             </div>
+            <div class="form-group" style="margin-top: 1.5rem;">
+              <label>Sectie 2 Afbeelding</label>
+              <ImageUploader v-model="form.section2_image_url" storage-path="section_2" />
+            </div>
           </div>
 
           <!-- Section 3 -->
@@ -112,6 +125,10 @@
             <div class="form-group" style="margin-top: 1rem;">
               <label>Tekst</label>
               <textarea class="neo-input" v-model="form.section3_text" rows="3"></textarea>
+            </div>
+            <div class="form-group" style="margin-top: 1.5rem;">
+              <label>Sectie 3 Afbeelding</label>
+              <ImageUploader v-model="form.section3_image_url" storage-path="section_3" />
             </div>
           </div>
         </section>
@@ -299,6 +316,7 @@
 import { ref, onMounted } from 'vue'
 import { getSettings, updateSettings, type Settings } from '../../services/settingsService'
 import { downloadBackup } from '../../services/backupService'
+import ImageUploader from '../../components/admin/ImageUploader.vue'
 
 const form = ref<Settings | null>(null)
 const loading = ref(true)
