@@ -86,6 +86,45 @@ export const updateBlockedPeriod = async (id: string, updates: Partial<BlockedPe
   }
 }
 
+export const createBooking = async (data: Omit<Booking, 'id'>) => {
+  // 1. Create a request first (using a placeholder email since it's required in the schema)
+  const { data: requestData, error: insertError } = await supabase
+    .from('booking_requests')
+    .insert([
+      {
+        guest_name: data.guest_name,
+        guest_email: 'manueel@maurice-mia.com',
+        start_date: data.start_date,
+        end_date: data.end_date,
+        status: 'pending',
+        message: 'Manuele boeking via beheerpaneel'
+      }
+    ])
+    .select()
+
+  if (insertError) {
+    console.error('Error creating initial request for manual booking:', insertError)
+    throw insertError
+  }
+
+  const requestId = requestData?.[0]?.id
+  if (!requestId) throw new Error('Failed to retrieve new request ID')
+
+  // 2. Immediately accept it to trigger the move to 'bookings' table
+  const { error: updateError } = await supabase
+    .from('booking_requests')
+    .update({ status: 'accepted' })
+    .eq('id', requestId)
+
+  if (updateError) {
+    console.error('Error accepting manual booking request:', updateError)
+    throw updateError
+  }
+
+  // 3. Delete the request from the pending list (matches acceptBookingRequest logic)
+  await supabase.from('booking_requests').delete().eq('id', requestId)
+}
+
 export const updateBooking = async (id: string, updates: { start_date: string, end_date: string }) => {
   const { error } = await supabase
     .from('bookings')

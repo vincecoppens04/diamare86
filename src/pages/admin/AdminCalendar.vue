@@ -7,6 +7,12 @@
           <p>Volledige controle over verblijven, geblokkeerde data en verblijfshistorie.</p>
         </div>
         <div class="header-actions">
+          <button class="neo-btn neo-btn-outline" @click="showManualModal = true" style="margin-right: 12px;">
+            <span class="btn-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            </span>
+            Manueel Inboeken
+          </button>
           <button class="neo-btn neo-btn-primary" @click="showBlockModal = true">
             <span class="btn-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -134,7 +140,53 @@
       </section>
     </div>
 
-    <!-- Modals (Simplified for brevity but fully functional) -->
+    <!-- Manual Booking Modal -->
+    <div v-if="showManualModal" class="modal-overlay" @click="closeManualModal">
+      <div class="modal-content glass-panel animate-fade-in" @click.stop>
+        <div class="modal-header">
+          <h3>Manuele Boeking Toevoegen</h3>
+          <button class="close-btn" @click="closeManualModal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
+        
+        <form @submit.prevent="handleManualBooking" class="modal-form">
+          <div class="modal-body">
+            <div v-if="errorMsg" class="alert alert-error">
+              <span class="alert-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </span>
+              {{ errorMsg }}
+            </div>
+            
+            <div class="form-group">
+              <label>Naam Gast</label>
+              <input class="neo-input" type="text" v-model="manualForm.guest_name" required placeholder="Bijv: Jan Janssen" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Aankomst</label>
+                <input class="neo-input" type="date" v-model="manualForm.start_date" required />
+              </div>
+              <div class="form-group">
+                <label>Vertrek</label>
+                <input class="neo-input" type="date" v-model="manualForm.end_date" required />
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="neo-btn neo-btn-outline" @click="closeManualModal" :disabled="isSubmitting">Annuleren</button>
+            <button type="submit" class="neo-btn neo-btn-primary" :disabled="isSubmitting">
+              <span v-if="isSubmitting" class="btn-spinner"></span>
+              {{ isSubmitting ? 'Opslaan...' : 'Boeking Bevestigen' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Block Dates Modal -->
     <div v-if="showBlockModal" class="modal-overlay" @click="closeModal">
       <div class="modal-content glass-panel animate-fade-in" @click.stop>
@@ -251,6 +303,7 @@ import {
   deleteBooking, 
   deleteBlockedPeriod,
   isRangeAvailable,
+  createBooking,
   type Booking,
   type BlockedPeriod
 } from '../../services/calendarService'
@@ -260,12 +313,14 @@ const pastBookings = ref<Booking[]>([])
 const blockedPeriods = ref<BlockedPeriod[]>([])
 const loading = ref(true)
 const showBlockModal = ref(false)
+const showManualModal = ref(false)
 const selectedEvent = ref<any>(null)
 const isSubmitting = ref(false)
 const errorMsg = ref('')
 const successMsg = ref('')
 
 const form = ref({ start_date: '', end_date: '', reason: '' })
+const manualForm = ref({ start_date: '', end_date: '', guest_name: '' })
 const manageForm = ref({ start_date: '', end_date: '', reason: '' })
 
 const fetchAll = async () => {
@@ -310,6 +365,12 @@ const closeModal = () => {
   errorMsg.value = ''
 }
 
+const closeManualModal = () => {
+  showManualModal.value = false
+  manualForm.value = { start_date: '', end_date: '', guest_name: '' }
+  errorMsg.value = ''
+}
+
 const closeManageModal = () => {
   selectedEvent.value = null
   errorMsg.value = ''
@@ -337,6 +398,34 @@ const handleBlockDates = async () => {
     fetchAll()
   } catch (err) {
     errorMsg.value = 'Blokkeren van data mislukt.'
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+const handleManualBooking = async () => {
+  if (manualForm.value.start_date > manualForm.value.end_date) {
+    errorMsg.value = 'De vertrekdatum mag niet vóór de aankomstdatum liggen.'
+    return
+  }
+
+  errorMsg.value = ''
+  isSubmitting.value = true
+  try {
+    const availability = await isRangeAvailable(manualForm.value.start_date, manualForm.value.end_date)
+    if (!availability.available) {
+      errorMsg.value = availability.conflict || 'Data zijn al bezet.'
+      isSubmitting.value = false
+      return
+    }
+
+    await createBooking(manualForm.value)
+    closeManualModal()
+    successMsg.value = 'Manuele boeking succesvol toegevoegd!'
+    setTimeout(() => { successMsg.value = '' }, 3000)
+    fetchAll()
+  } catch (err) {
+    errorMsg.value = 'Toevoegen van boeking mislukt.'
   } finally {
     isSubmitting.value = false
   }
@@ -661,7 +750,7 @@ const handleDeleteStay = async (type: string, id: string) => {
 
 .form-row {
   display: grid;
-  grid-template-cols: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 
