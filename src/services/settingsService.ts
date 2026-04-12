@@ -121,7 +121,6 @@ export const updateSettings = async (settings: Settings): Promise<void> => {
     faq1_a: settings.faq1_a,
     faq2_q: settings.faq2_q,
     faq2_a: settings.faq2_a,
-    faq2_a: settings.faq2_a,
     faq3_q: settings.faq3_q,
     faq3_a: settings.faq3_a,
     contract_text: settings.contract_text
