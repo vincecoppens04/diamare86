@@ -15,6 +15,7 @@ import AdminRequests from '@/pages/admin/AdminRequests.vue'
 import AdminCalendar from '@/pages/admin/AdminCalendar.vue'
 import AdminSettings from '@/pages/admin/AdminSettings.vue'
 import AdminEmails from '@/pages/admin/AdminEmails.vue'
+import AdminContracts from '@/pages/admin/AdminContracts.vue'
 
 const routes = [
   {
@@ -53,6 +54,7 @@ const routes = [
       },
       { path: 'requests', name: 'AdminRequests', component: AdminRequests },
       { path: 'calendar', name: 'AdminCalendar', component: AdminCalendar },
+      { path: 'contracts', name: 'AdminContracts', component: AdminContracts },
       { path: 'settings', name: 'AdminSettings', component: AdminSettings },
       { path: 'emails', name: 'AdminEmails', component: AdminEmails }
     ]

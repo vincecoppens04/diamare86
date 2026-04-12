@@ -141,10 +141,12 @@ const handleSave = async (template: EmailTemplate) => {
 }
 
 const formatTemplateName = (key: string) => {
-  return key
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+  const mapping: Record<string, string> = {
+    'request_received': 'Aanvraag Ontvangen',
+    'booking_accepted': 'Boeking Bevestigd',
+    'booking_refused': 'Boeking Geweigerd'
+  }
+  return mapping[key] || key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')
 }
 </script>
 

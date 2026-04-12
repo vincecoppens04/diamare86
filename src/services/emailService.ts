@@ -63,18 +63,19 @@ export const updateTemplate = async (templateId: string, updates: { subject: str
  */
 const formatDate = (dateStr: string) => {
   if (!dateStr) return ''
-  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(dateStr))
+  return new Intl.DateTimeFormat('nl-NL', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(dateStr))
 }
 
 /**
  * Replace variables in template string (tolerant of different formats)
  */
-const parseTemplate = (text: string, data: EmailData) => {
+const parseTemplate = (text: string, data: EmailData, contractUrl?: string | null) => {
   if (!text) return ''
   return text
     .replace(/\{+guest_name\}+/gi, data.guest_name || '')
-    .replace(/\{+start_date\}+/gi, formatDate(data.start_date))
+    .replace(/\{+(start_date|begin_date)\}+/gi, formatDate(data.start_date))
     .replace(/\{+end_date\}+/gi, formatDate(data.end_date))
+    .replace(/\{+contract_url\}+/gi, contractUrl || '')
 }
 
 /**
@@ -84,23 +85,23 @@ const getEmailContent = (type: EmailType) => {
   switch (type) {
     case 'request_received':
       return {
-        subject: 'Booking Request Received - Maurice&Mia',
-        message: 'We have received your booking request for Maurice&Mia. Our team will review it and get back to you within 24 hours.'
+        subject: 'Boekingsaanvraag Ontvangen - Maurice&Mia',
+        message: 'We hebben je boekingsaanvraag voor Maurice&Mia ontvangen. Ons team zal deze beoordelen en binnen 24 uur contact met je opnemen.'
       }
     case 'booking_accepted':
       return {
-        subject: 'Booking Confirmed! - Maurice&Mia',
-        message: 'Great news! Your booking request for Maurice&Mia has been accepted. We look forward to hosting you.'
+        subject: 'Boeking Bevestigd! - Maurice&Mia',
+        message: 'Geweldig nieuws! Je boekingsaanvraag voor Maurice&Mia is geaccepteerd. We kijken ernaar uit je te mogen verwelkomen.'
       }
     case 'booking_refused':
       return {
-        subject: 'Booking Update - Maurice&Mia',
-        message: 'Thank you for your interest in Maurice&Mia. Unfortunately, the dates you requested are no longer available for booking.'
+        subject: 'Update over je boeking - Maurice&Mia',
+        message: 'Bedankt voor je interesse in Maurice&Mia. Helaas zijn de door jou aangevraagde data niet langer beschikbaar voor boeking.'
       }
     default:
       return {
-        subject: 'Update regarding your stay',
-        message: 'There has been an update regarding your booking at Maurice&Mia.'
+        subject: 'Update over je verblijf',
+        message: 'Er is een update met betrekking tot je boeking bij Maurice&Mia.'
       }
   }
 }
@@ -108,7 +109,7 @@ const getEmailContent = (type: EmailType) => {
 /**
  * Send an email to the guest
  */
-export const sendGuestEmail = async (type: EmailType, data: EmailData) => {
+export const sendGuestEmail = async (type: EmailType, data: EmailData, contractUrl?: string | null) => {
   if (!SERVICE_ID || !TEMPLATE_GUEST || !PUBLIC_KEY) {
     console.warn('EmailJS guest config missing. Skipping email.')
     return
@@ -130,14 +131,17 @@ export const sendGuestEmail = async (type: EmailType, data: EmailData) => {
       subject = fallback.subject
       message = fallback.message
     } else {
-      subject = parseTemplate(templateData.subject, data)
-      message = parseTemplate(templateData.body, data)
+      subject = parseTemplate(templateData.subject, data, contractUrl)
+      message = parseTemplate(templateData.body, data, contractUrl)
     }
   } catch (err) {
     console.error('Error fetching template:', err)
     const fallback = getEmailContent(type)
     subject = fallback.subject
     message = fallback.message
+  }
+  if (contractUrl) {
+    console.log('PREPARING EMAIL WITH CONTRACT LINK:', contractUrl)
   }
 
   const templateParams = {
@@ -148,6 +152,7 @@ export const sendGuestEmail = async (type: EmailType, data: EmailData) => {
     message,
     start_date: data.start_date,
     end_date: data.end_date,
+    contract_url: contractUrl || '', // Public URL for free tier
   }
 
   console.log(`EmailJS Sending to GUEST [${type}]:`, templateParams)
@@ -176,7 +181,7 @@ export const sendAdminNotification = async (data: EmailData) => {
 
   const adminParams = {
     to_email: '', // Will be filled from DB settings (admin recipient)
-    subject: `New Request from ${data.guest_name}`,
+    subject: `Nieuwe aanvraag van ${data.guest_name}`,
     guest_name: data.guest_name,
     guest_email: data.guest_email,
     guest_message: data.message || '(No message content)',

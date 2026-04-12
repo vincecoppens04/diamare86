@@ -37,12 +37,23 @@ export interface Settings {
   contact_title?: string | null
   contact_subtitle?: string | null
   contact_details_title?: string | null
+  contract_text?: string | null
 
   // Image URLs
   hero_image_url?: string | null
   section1_image_url?: string | null
   section2_image_url?: string | null
   section3_image_url?: string | null
+
+  // FAQ Fields
+  faq_title?: string | null
+  faq_subtitle?: string | null
+  faq1_q?: string | null
+  faq1_a?: string | null
+  faq2_q?: string | null
+  faq2_a?: string | null
+  faq3_q?: string | null
+  faq3_a?: string | null
 }
 
 export const getSettings = async (): Promise<Settings | null> => {
@@ -103,7 +114,17 @@ export const updateSettings = async (settings: Settings): Promise<void> => {
     hero_image_url: settings.hero_image_url,
     section1_image_url: settings.section1_image_url,
     section2_image_url: settings.section2_image_url,
-    section3_image_url: settings.section3_image_url
+    section3_image_url: settings.section3_image_url,
+    faq_title: settings.faq_title,
+    faq_subtitle: settings.faq_subtitle,
+    faq1_q: settings.faq1_q,
+    faq1_a: settings.faq1_a,
+    faq2_q: settings.faq2_q,
+    faq2_a: settings.faq2_a,
+    faq2_a: settings.faq2_a,
+    faq3_q: settings.faq3_q,
+    faq3_a: settings.faq3_a,
+    contract_text: settings.contract_text
     })
     .eq('id', settings.id)
 

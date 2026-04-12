@@ -133,7 +133,7 @@
               <div class="price-separator"></div>
               <div class="price-box">
                 <span class="p-amount">€{{ settings?.weekend_price ?? '—' }}</span>
-                <span class="p-label">Weekend / nacht</span>
+                <span class="p-label">Vakantie & Weekend (vr-zo)</span>
               </div>
             </div>
             <router-link to="/calendar" class="neo-btn neo-btn-primary mega-btn glow-btn">
@@ -189,6 +189,38 @@
       </div>
     </section>
 
+    <!-- FAQ Section -->
+    <section v-if="hasFaqs" class="faq-section">
+      <div class="container-minimal">
+        <div class="scroll-reveal text-center" style="margin-bottom: 2.5rem;">
+          <h2 class="text-ultra-small" v-html="settings?.faq_title || 'Veelgestelde <span class=\'text-gradient\'>Vragen</span>'"></h2>
+          <p class="text-lead-premium">{{ settings?.faq_subtitle || 'Alles wat u moet weten over uw verblijf in ons appartement.' }}</p>
+        </div>
+
+        <div class="faq-accordion scroll-reveal">
+          <div 
+            v-for="(faq, idx) in activeFaqs" 
+            :key="idx" 
+            class="faq-item glass-panel"
+            :class="{ 'is-open': openFaq === idx }"
+            @click="toggleFaq(idx)"
+          >
+            <div class="faq-question">
+              <span class="q-text">{{ faq.question }}</span>
+              <span class="q-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </span>
+            </div>
+            <div class="faq-answer">
+              <div class="a-content">
+                {{ faq.answer }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Lightbox Modal -->
     <Teleport to="body">
       <Transition name="fade">
@@ -204,7 +236,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { getSettings, type Settings } from '../services/settingsService'
 
 const settings = ref<Settings | null>(null)
@@ -213,6 +245,7 @@ const observer = ref<IntersectionObserver | null>(null)
 // Carousel state
 const galleryContainer = ref<HTMLElement | null>(null)
 const activeImage = ref<string | null>(null)
+const openFaq = ref<number | null>(null)
 let autoScrollInterval: ReturnType<typeof setInterval> | null = null
 
 const startAutoScroll = () => {
@@ -253,6 +286,31 @@ const scrollGallery = (direction: 'left' | 'right') => {
   }
 }
 
+const toggleFaq = (index: number) => {
+  if (openFaq.value === index) {
+    openFaq.value = null
+  } else {
+    openFaq.value = index
+  }
+}
+
+const activeFaqs = computed(() => {
+  if (!settings.value) return []
+  const faqs = []
+  for (let i = 1; i <= 3; i++) {
+    const qKey = `faq${i}_q` as keyof Settings
+    const aKey = `faq${i}_a` as keyof Settings
+    const q = settings.value[qKey]
+    const a = settings.value[aKey]
+    if (q && a) {
+      faqs.push({ question: q, answer: a })
+    }
+  }
+  return faqs
+})
+
+const hasFaqs = computed(() => activeFaqs.value.length > 0)
+
 // Helper to handle dynamic images with local asset fallbacks
 const getImageUrl = (customUrl: string | null | undefined, fallbackName: string) => {
   if (customUrl) return customUrl
@@ -278,6 +336,8 @@ onMounted(async () => {
     }, { threshold: 0.1 })
 
     // Observe all reveal elements
+    // Wait for next tick so v-if elements (like FAQ) are rendered
+    await nextTick()
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.value?.observe(el))
 
     // Start auto carousel
@@ -528,7 +588,7 @@ onUnmounted(() => {
 
 /* Photo Gallery Marquee Styles */
 .gallery-section {
-  padding: 4rem 0 8rem 0; /* Remove horizontal padding for full bleed */
+  padding: 4rem 0; /* Reduced bottom padding */
   background: white;
   position: relative;
   z-index: 2;
@@ -667,4 +727,87 @@ onUnmounted(() => {
   opacity: 0;
 }
 
+/* FAQ Styles */
+.faq-section {
+  padding: 4rem 0; /* Reduced from 10rem */
+  background: #fafafa;
+  position: relative;
+  z-index: 2;
+}
+
+.faq-accordion {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.faq-item {
+  background: white;
+  border: 1px solid var(--surface-border);
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.faq-item:hover {
+  border-color: var(--accent-primary);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.faq-item.is-open {
+  border-color: var(--accent-primary);
+  box-shadow: 0 15px 40px rgba(124, 58, 237, 0.1);
+}
+
+.faq-question {
+  padding: 2rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.q-text {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.q-icon {
+  color: var(--accent-primary);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.is-open .q-icon {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.is-open .faq-answer {
+  max-height: 500px;
+}
+
+.a-content {
+  padding: 0 2.5rem 2.5rem;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .faq-section { padding: 6rem 1rem; }
+  .faq-question { padding: 1.5rem; }
+  .a-content { padding: 0 1.5rem 1.5rem; }
+  .q-text { font-size: 1.1rem; }
+}
 </style>

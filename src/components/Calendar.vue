@@ -65,6 +65,7 @@
           @click="handleDayClick(day)"
         >
           <span class="day-number">{{ day.dateNumber }}</span>
+          <span v-if="day.price" class="day-price">€{{ day.price }}</span>
         </div>
       </div>
     </div>
@@ -78,6 +79,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { getBookings, getBlockedPeriods, type Booking, type BlockedPeriod } from '../services/calendarService'
+import { getSettings, type Settings } from '../services/settingsService'
+import { getSchoolHolidays, isWeekendPriceDay, type HolidayPeriod } from '../services/holidayService'
 
 const props = defineProps({
   showHeader: { type: Boolean, default: true },
@@ -86,17 +89,27 @@ const props = defineProps({
 
 const bookings = ref<Booking[]>([])
 const blockedPeriods = ref<BlockedPeriod[]>([])
+const settings = ref<Settings | null>(null)
+const holidays = ref<HolidayPeriod[]>([])
 const loading = ref(true)
 const error = ref('')
 
 const viewDate = ref(new Date())
-const weekDays = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za']
+const weekDays = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo']
 
 onMounted(async () => {
   try {
-    const [b, bp] = await Promise.all([getBookings(), getBlockedPeriods()])
+    const year = viewDate.value.getFullYear()
+    const [b, bp, s, h] = await Promise.all([
+      getBookings(), 
+      getBlockedPeriods(),
+      getSettings(),
+      getSchoolHolidays(year)
+    ])
     bookings.value = b
     blockedPeriods.value = bp
+    settings.value = s
+    holidays.value = h
   } catch (err) {
     error.value = 'Laden van beschikbaarheid mislukt.'
     console.error(err)
@@ -151,8 +164,9 @@ const calendarDays = computed(() => {
   
   const days = []
   
-  // Padding days from previous month
-  for (let i = 0; i < firstDayOfMonth; i++) {
+  // Padding days from previous month (starting from Monday)
+  const padding = (firstDayOfMonth + 6) % 7
+  for (let i = 0; i < padding; i++) {
     days.push({ isPadding: true, dateNumber: '' })
   }
   
@@ -192,6 +206,13 @@ const calendarDays = computed(() => {
     // Single day stay (start == end) counts as both start AND end, which we'll render as solid
     // OR if it's both a start of one event and an end of another (changeover)
     
+    // Price Calculation
+    let price = null
+    if (settings.value) {
+      const isWeekend = isWeekendPriceDay(currentDay, holidays.value)
+      price = isWeekend ? settings.value.weekend_price : settings.value.week_price
+    }
+
     days.push({
       isPadding: false,
       dateNumber: i,
@@ -202,7 +223,8 @@ const calendarDays = computed(() => {
       isOccupied: isStart || isEnd || isMiddle,
       eventType,
       eventId,
-      eventDetails
+      eventDetails,
+      price
     })
   }
   
@@ -376,6 +398,14 @@ const calendarDays = computed(() => {
   font-size: 1rem;
   font-weight: 800;
   color: #000;
+  z-index: 2;
+  margin-bottom: 2px;
+}
+
+.day-price {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted);
   z-index: 2;
 }
 

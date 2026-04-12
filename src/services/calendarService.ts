@@ -5,6 +5,8 @@ export interface Booking {
   start_date: string
   end_date: string
   guest_name?: string
+  guest_email?: string
+  total_price?: number
 }
 
 export interface BlockedPeriod {
@@ -17,7 +19,7 @@ export interface BlockedPeriod {
 export const getBookings = async (): Promise<Booking[]> => {
   const { data, error } = await supabase
     .from('bookings')
-    .select('id, start_date, end_date, guest_name')
+    .select('id, start_date, end_date, guest_name, guest_email, total_price')
     .order('start_date', { ascending: true })
 
   if (error) {
@@ -31,7 +33,7 @@ export const getPastBookings = async (): Promise<Booking[]> => {
   const today = new Date().toISOString().split('T')[0]
   const { data, error } = await supabase
     .from('bookings')
-    .select('id, start_date, end_date, guest_name')
+    .select('id, start_date, end_date, guest_name, guest_email, total_price')
     .lt('start_date', today)
     .order('end_date', { ascending: false })
 
@@ -96,6 +98,7 @@ export const createBooking = async (data: Omit<Booking, 'id'>) => {
         guest_email: 'manueel@maurice-mia.com',
         start_date: data.start_date,
         end_date: data.end_date,
+        total_price: data.total_price || 0,
         status: 'pending',
         message: 'Manuele boeking via beheerpaneel'
       }

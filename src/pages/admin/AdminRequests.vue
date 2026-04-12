@@ -75,6 +75,12 @@
                   <span v-if="req.guest_phone">{{ req.guest_phone }}</span>
                 </span>
               </div>
+              <div class="detail-item">
+                <span class="detail-label">Totaalbedrag</span>
+                <span class="detail-value text-gradient" style="font-weight: 800; font-size: 1.25rem;">
+                  €{{ req.total_price || '—' }}
+                </span>
+              </div>
             </div>
 
             <div class="request-message" v-if="req.message">
@@ -141,6 +147,10 @@
               <div class="summary-item">
                 <label>Periode</label>
                 <span>{{ formatDate(selectedRequest.start_date) }} — {{ formatDate(selectedRequest.end_date) }}</span>
+              </div>
+              <div class="summary-item">
+                <label>Totaalbedrag</label>
+                <span class="text-gradient" style="font-size: 1.5rem; font-weight: 800;">€{{ selectedRequest.total_price || '—' }}</span>
               </div>
             </div>
             

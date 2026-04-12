@@ -48,6 +48,11 @@
               <p class="stay-period">
                 {{ formatDate(nextBooking.start_date) }} — {{ formatDate(nextBooking.end_date) }}
               </p>
+              <div class="next-booking-extra">
+                <a :href="`mailto:${nextBooking.guest_email}`" class="extra-email">{{ nextBooking.guest_email }}</a>
+                <span class="extra-divider">·</span>
+                <span class="extra-price text-gradient">€{{ nextBooking.total_price || '—' }}</span>
+              </div>
             </div>
             <div v-else class="no-upcoming">
               <p>Geen aankomende boekingen gepland.</p>
@@ -115,6 +120,8 @@ import { supabase } from '../../lib/supabase'
 interface Booking {
   id: string
   guest_name: string
+  guest_email: string
+  total_price: number
   start_date: string
   end_date: string
 }
@@ -157,7 +164,7 @@ const fetchMetrics = async () => {
     // 3. Next Upcoming Booking Details
     const { data: nData, error: nErr } = await supabase
       .from('bookings')
-      .select('id, guest_name, start_date, end_date')
+      .select('id, guest_name, guest_email, total_price, start_date, end_date')
       .gte('start_date', today)
       .order('start_date', { ascending: true })
       .limit(1)
@@ -306,6 +313,28 @@ onMounted(fetchMetrics)
 .stay-period {
   font-size: 1.1rem;
   color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.next-booking-extra {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.extra-email {
+  color: var(--accent-primary);
+  font-weight: 500;
+}
+
+.extra-divider {
+  color: var(--surface-border);
+}
+
+.extra-price {
+  font-weight: 800;
+  font-size: 1.1rem;
 }
 
 .metric-sub {

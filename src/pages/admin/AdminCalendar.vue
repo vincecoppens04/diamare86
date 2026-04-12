@@ -70,6 +70,10 @@
               <div class="card-info">
                 <h3>{{ booking.guest_name }}</h3>
                 <p class="dates">{{ formatDate(booking.start_date) }} — {{ formatDate(booking.end_date) }}</p>
+                <div class="sidebar-extra">
+                  <a :href="`mailto:${booking.guest_email}`" class="sidebar-email">{{ booking.guest_email }}</a>
+                  <span class="sidebar-price">€{{ booking.total_price || '—' }}</span>
+                </div>
               </div>
               <div class="card-actions">
                 <button class="icon-btn edit" @click="openManageModal('booking', booking)" title="Edit">
@@ -588,6 +592,42 @@ const handleDeleteStay = async (type: string, id: string) => {
   justify-content: space-between;
   align-items: center;
   background: white;
+}
+
+.sidebar-card h3 {
+  font-size: 1.05rem;
+  margin: 0 0 0.25rem 0;
+}
+
+.sidebar-card .dates {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-extra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  width: 100%;
+}
+
+.sidebar-email {
+  color: var(--accent-primary);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-price {
+  font-weight: 700;
+  color: var(--text-primary);
+  background: rgba(139, 92, 246, 0.05);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
 }
 
 .empty-list-minimal {

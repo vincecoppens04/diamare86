@@ -1,5 +1,7 @@
 import { supabase } from '../lib/supabase'
 import { sendGuestEmail, sendAdminNotification } from './emailService'
+import { getSettings } from './settingsService'
+import { generateContractPDF, uploadContractPDF } from './contractService'
 
 export interface BookingRequestData {
   guest_name: string
@@ -8,6 +10,7 @@ export interface BookingRequestData {
   message?: string
   start_date: string // ISO date string YYYY-MM-DD
   end_date: string   // ISO date string YYYY-MM-DD
+  total_price: number
 }
 
 export interface BookingRequest extends BookingRequestData {
@@ -74,13 +77,28 @@ export const acceptBookingRequest = async (request: BookingRequest) => {
     throw new Error(error.message)
   }
 
+  // Fetch settings for the contract template
+  const settings = await getSettings()
+  const contractTemplate = settings?.contract_text || ''
+  
+  // Generate & Upload Contract PDF
+  let contractUrl = null
+  if (contractTemplate) {
+    try {
+      const pdfBlob = generateContractPDF(request, contractTemplate)
+      contractUrl = await uploadContractPDF(request.id, pdfBlob)
+    } catch (err) {
+      console.error('Contract Automation Error:', err)
+    }
+  }
+
   // Invoke EmailJS (Non-blocking)
   sendGuestEmail('booking_accepted', {
     guest_name: request.guest_name,
     guest_email: request.guest_email,
     start_date: request.start_date,
     end_date: request.end_date
-  })
+  }, contractUrl)
 
   // Once accepted, delete the request from the pending list
   await supabase.from('booking_requests').delete().eq('id', request.id)

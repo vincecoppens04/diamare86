@@ -50,6 +50,14 @@
         <textarea class="neo-input" id="message" v-model="form.message" rows="4" placeholder="Heeft u speciale verzoeken of vragen?"></textarea>
       </div>
 
+      <div v-if="totalPrice > 0" class="price-summary animate-fade-in">
+        <div class="price-row">
+          <span class="price-label">Totaalbedrag verblijf:</span>
+          <span class="price-value text-gradient">€{{ totalPrice }}</span>
+        </div>
+        <p class="price-note">* Inclusief weekend- en vakantietoeslagen waar van toepassing.</p>
+      </div>
+
       <button type="submit" :disabled="isSubmitting" class="neo-btn neo-btn-primary submit-btn">
         <span v-if="isSubmitting" class="btn-spinner"></span>
         {{ isSubmitting ? 'Versturen...' : 'Aanvraag Versturen' }}
@@ -59,9 +67,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { createBookingRequest, type BookingRequestData } from '../services/bookingService'
 import { isRangeAvailable } from '../services/calendarService'
+import { getSettings, type Settings } from '../services/settingsService'
+import { getSchoolHolidays, isWeekendPriceDay, type HolidayPeriod } from '../services/holidayService'
 
 const initialFormState: BookingRequestData = {
   guest_name: '',
@@ -73,9 +83,44 @@ const initialFormState: BookingRequestData = {
 }
 
 const form = ref<BookingRequestData>({ ...initialFormState })
+const settings = ref<Settings | null>(null)
+const holidays = ref<HolidayPeriod[]>([])
 const isSubmitting = ref(false)
 const successMessage = ref('')
 const errorMessage = ref('')
+
+onMounted(async () => {
+  try {
+    const s = await getSettings()
+    settings.value = s
+    const h = await getSchoolHolidays(new Date().getFullYear())
+    holidays.value = h
+  } catch (err) {
+    console.error('Error loading pricing data:', err)
+  }
+})
+
+const totalPrice = computed(() => {
+  if (!form.value.start_date || !form.value.end_date || !settings.value) return 0
+  
+  const start = new Date(form.value.start_date)
+  const end = new Date(form.value.end_date)
+  
+  if (start >= end) return 0
+  
+  let total = 0
+  let current = new Date(start)
+  
+  // Calculate price per night (not including the check-out day)
+  while (current < end) {
+    const isWeekend = isWeekendPriceDay(current, holidays.value)
+    const nightPrice = isWeekend ? (settings.value.weekend_price || 0) : (settings.value.week_price || 0)
+    total += nightPrice
+    current.setDate(current.getDate() + 1)
+  }
+  
+  return total
+})
 
 const handleSubmit = async () => {
   // 1. Basic Validation
@@ -103,7 +148,10 @@ const handleSubmit = async () => {
     }
 
     // 3. Submit Request
-    await createBookingRequest(form.value)
+    await createBookingRequest({
+      ...form.value,
+      total_price: totalPrice.value
+    })
     successMessage.value = 'Boekingsaanvraag verzonden. Bevestigingsmail verstuurd.'
     form.value = { ...initialFormState }
   } catch (error: any) {
@@ -188,6 +236,40 @@ label {
   border-top-color: white;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
+}
+
+/* Price Summary */
+.price-summary {
+  margin: 1rem 0;
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.price-label {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.price-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+
+.price-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-weight: 500;
 }
 
 @keyframes spin {

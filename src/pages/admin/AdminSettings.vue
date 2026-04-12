@@ -197,6 +197,42 @@
           </div>
         </section>
 
+        <!-- FAQ Section -->
+        <section class="settings-card glass-panel">
+          <div class="card-header">
+            <span class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </span>
+            <h2>Veelgestelde Vragen (FAQ)</h2>
+          </div>
+          <p class="card-desc">Beheer de FAQ sectie op de homepage.</p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="faq_title">FAQ Sectie Titel</label>
+              <input class="neo-input" type="text" id="faq_title" v-model="form.faq_title" placeholder="bijv. Veelgestelde Vragen" />
+            </div>
+            <div class="form-group">
+              <label for="faq_subtitle">FAQ Sectie Subtitel</label>
+              <input class="neo-input" type="text" id="faq_subtitle" v-model="form.faq_subtitle" placeholder="bijv. Alles wat u moet weten over uw verblijf." />
+            </div>
+          </div>
+
+          <div class="faq-admin-list" style="margin-top: 2.5rem; display: flex; flex-direction: column; gap: 2rem;">
+            <div v-for="i in 3" :key="i" class="faq-item-edit" style="padding: 1.5rem; background: var(--bg-secondary); border: 1px solid var(--surface-border); border-radius: var(--radius-md);">
+              <h4 style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--accent-primary);">Vraag #{{ i }}</h4>
+              <div class="form-group">
+                <label>Vraag</label>
+                <input class="neo-input" type="text" v-model="form[`faq${i}_q`]" :placeholder="`Vraag ${i}...`" />
+              </div>
+              <div class="form-group" style="margin-top: 1rem;">
+                <label>Antwoord</label>
+                <textarea class="neo-input" v-model="form[`faq${i}_a`]" rows="2" :placeholder="`Antwoord ${i}...`"></textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- Existing Pricing Section -->
         <section class="settings-card glass-panel">
           <div class="card-header">
