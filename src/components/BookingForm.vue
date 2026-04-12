@@ -79,7 +79,8 @@ const initialFormState: BookingRequestData = {
   guest_phone: '',
   start_date: '',
   end_date: '',
-  message: ''
+  message: '',
+  total_price: 0
 }
 
 const form = ref<BookingRequestData>({ ...initialFormState })

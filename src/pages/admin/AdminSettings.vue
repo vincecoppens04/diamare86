@@ -223,11 +223,11 @@
               <h4 style="margin: 0 0 1rem 0; font-size: 0.9rem; color: var(--accent-primary);">Vraag #{{ i }}</h4>
               <div class="form-group">
                 <label>Vraag</label>
-                <input class="neo-input" type="text" v-model="form[`faq${i}_q`]" :placeholder="`Vraag ${i}...`" />
+                <input class="neo-input" type="text" v-model="(form as any)[`faq${i}_q`]" :placeholder="`Vraag ${i}...`" />
               </div>
               <div class="form-group" style="margin-top: 1rem;">
                 <label>Antwoord</label>
-                <textarea class="neo-input" v-model="form[`faq${i}_a`]" rows="2" :placeholder="`Antwoord ${i}...`"></textarea>
+                <textarea class="neo-input" v-model="(form as any)[`faq${i}_a`]" rows="2" :placeholder="`Antwoord ${i}...`"></textarea>
               </div>
             </div>
           </div>
