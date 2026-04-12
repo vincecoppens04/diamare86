@@ -109,7 +109,9 @@ const onFileChange = async (event: Event) => {
       .getPublicUrl(filePath)
 
     if (data?.publicUrl) {
-      emit('update:modelValue', data.publicUrl)
+      const sep = data.publicUrl.includes('?') ? '&' : '?'
+      const cacheBustedUrl = `${data.publicUrl}${sep}t=${Date.now()}`
+      emit('update:modelValue', cacheBustedUrl)
     }
   } catch (error: any) {
     console.error('Upload/Conversion Error:', error)
