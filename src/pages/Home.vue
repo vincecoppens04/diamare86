@@ -162,6 +162,44 @@
         </div>
       </div>
     </section>
+
+    <!-- Photo Gallery -->
+    <section class="gallery-section">
+      <div class="container-minimal text-center">
+        <div class="scroll-reveal">
+          <h2 class="text-ultra-small" v-html="'Onze <span class=\'text-gradient\'>Galerij</span>'"></h2>
+          <p class="text-lead-premium">Een blik op de sfeer en het interieur van Maurice&Mia.</p>
+        </div>
+      </div>
+      
+      <div class="gallery-carousel-wrapper" @mouseenter="stopAutoScroll" @mouseleave="startAutoScroll" @touchstart="stopAutoScroll" @touchend="startAutoScroll">
+        <button class="carousel-btn prev-btn" @click="scrollGallery('left')" aria-label="Vorige foto's">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        
+        <div class="gallery-carousel" ref="galleryContainer">
+          <div v-for="(img, idx) in galleryImages" :key="idx" class="carousel-item" @click="activeImage = img">
+            <img :src="img" alt="Gallery Image" loading="lazy" />
+          </div>
+        </div>
+
+        <button class="carousel-btn next-btn" @click="scrollGallery('right')" aria-label="Volgende foto's">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <Teleport to="body">
+      <Transition name="fade">
+        <div v-if="activeImage" class="lightbox-overlay" @click="activeImage = null">
+          <button class="lightbox-close" @click.stop="activeImage = null" aria-label="Sluiten">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+          <img :src="activeImage" class="lightbox-img" alt="Enlarged gallery image" />
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -172,12 +210,59 @@ import { getSettings, type Settings } from '../services/settingsService'
 const settings = ref<Settings | null>(null)
 const observer = ref<IntersectionObserver | null>(null)
 
+// Carousel state
+const galleryContainer = ref<HTMLElement | null>(null)
+const activeImage = ref<string | null>(null)
+let autoScrollInterval: ReturnType<typeof setInterval> | null = null
+
+const startAutoScroll = () => {
+  if (autoScrollInterval) clearInterval(autoScrollInterval)
+  autoScrollInterval = setInterval(() => {
+    if (!galleryContainer.value) return
+    const el = galleryContainer.value
+    // Scroll right by full clientWidth to show "a few other images"
+    const nextScroll = el.scrollLeft + el.clientWidth
+    // Check if we reached the end
+    if (Math.ceil(nextScroll) >= el.scrollWidth - 10) {
+      el.scrollTo({ left: 0, behavior: 'smooth' })
+    } else {
+      el.scrollBy({ left: el.clientWidth, behavior: 'smooth' })
+    }
+  }, 5000) // Show for 5 seconds
+}
+
+const stopAutoScroll = () => {
+  if (autoScrollInterval) {
+    clearInterval(autoScrollInterval)
+    autoScrollInterval = null
+  }
+}
+
+const scrollGallery = (direction: 'left' | 'right') => {
+  stopAutoScroll()
+  if (!galleryContainer.value) return
+  const el = galleryContainer.value
+  const offset = direction === 'left' ? -el.clientWidth : el.clientWidth;
+  
+  if (direction === 'left' && el.scrollLeft <= 5) {
+     el.scrollTo({ left: el.scrollWidth, behavior: 'smooth' })
+  } else if (direction === 'right' && Math.ceil(el.scrollLeft + el.clientWidth) >= el.scrollWidth - 10) {
+     el.scrollTo({ left: 0, behavior: 'smooth' })
+  } else {
+     el.scrollBy({ left: offset, behavior: 'smooth' })
+  }
+}
+
 // Helper to handle dynamic images with local asset fallbacks
 const getImageUrl = (customUrl: string | null | undefined, fallbackName: string) => {
   if (customUrl) return customUrl
   // Correctly resolve local asset URL in Vite
   return new URL(`../assets/${fallbackName}`, import.meta.url).href
 }
+
+// Statically import all images from the gallery folder
+const imageModules = import.meta.glob<{ default: string }>('../assets/galery/*', { eager: true });
+const galleryImages = Object.values(imageModules).map(mod => mod.default);
 
 onMounted(async () => {
   try {
@@ -194,6 +279,9 @@ onMounted(async () => {
 
     // Observe all reveal elements
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.value?.observe(el))
+
+    // Start auto carousel
+    startAutoScroll()
   } catch (err) {
     console.error(err)
   }
@@ -201,6 +289,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   observer.value?.disconnect()
+  stopAutoScroll()
 })
 </script>
 
@@ -436,4 +525,146 @@ onUnmounted(() => {
   .pricing-display { gap: 2rem; }
   .contact-hero-section { padding: 8rem 1rem; }
 }
+
+/* Photo Gallery Marquee Styles */
+.gallery-section {
+  padding: 4rem 0 8rem 0; /* Remove horizontal padding for full bleed */
+  background: white;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.gallery-section .container-minimal {
+  padding: 0 2rem;
+}
+
+.gallery-carousel-wrapper {
+  position: relative;
+  max-width: 1400px;
+  margin: 3.5rem auto 0;
+  padding: 0 4rem; /* Space for arrow buttons */
+}
+.gallery-carousel {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Hide scrollbar Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
+  border-radius: 20px;
+}
+.gallery-carousel::-webkit-scrollbar {
+  display: none; /* Hide scrollbar Chrome/Safari */
+}
+.carousel-item {
+  flex: 0 0 calc(33.333% - 1.33rem); /* Show 3 large images on desktop */
+  scroll-snap-align: start;
+  aspect-ratio: 4/5; /* Changed from 4/3 for much taller images */
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+  position: relative;
+  cursor: zoom-in;
+}
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.carousel-item:hover img {
+  transform: scale(1.03);
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid var(--surface-border);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  color: var(--text-primary);
+}
+.carousel-btn:hover {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+  transform: translateY(-50%) scale(1.1);
+}
+.prev-btn { left: 0; }
+.next-btn { right: 0; }
+
+@media (max-width: 1024px) {
+  .carousel-item {
+    flex: 0 0 calc(50% - 1rem); /* 2 images per view on tablet */
+  }
+}
+@media (max-width: 768px) {
+  .gallery-carousel-wrapper {
+    padding: 0 1rem;
+  }
+  .carousel-item {
+    flex: 0 0 calc(100% - 0rem); /* 1 image per view on mobile */
+  }
+  .carousel-btn {
+    display: none; /* Buttons hidden on mobile, user can natively swipe */
+  }
+}
+
+/* Lightbox Styles */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  cursor: zoom-out;
+}
+.lightbox-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+  user-select: none;
+}
+.lightbox-close {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  z-index: 10000;
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+.lightbox-close:hover {
+  transform: scale(1.1);
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
 </style>
