@@ -161,11 +161,29 @@ main {
 
 @media (max-width: 640px) {
   .navbar {
-    padding: 0.75rem 1rem;
+    padding: 0.6rem 0.75rem;
+    gap: 0.5rem;
   }
+  
+  .logo-text {
+    display: none; /* Hide logo text on very small screens to save space */
+  }
+
   .nav-links {
-    display: none;
+    display: flex;
+    gap: 0.25rem;
   }
+
+  .nav-link {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .admin-btn {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
   .footer-inner {
     flex-direction: column;
     gap: 0.5rem;
