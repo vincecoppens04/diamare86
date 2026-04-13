@@ -95,7 +95,7 @@ export const createBooking = async (data: Omit<Booking, 'id'>) => {
     .insert([
       {
         guest_name: data.guest_name,
-        guest_email: 'manueel@maurice-mia.com',
+        guest_email: data.guest_email || 'MANUEEL',
         start_date: data.start_date,
         end_date: data.end_date,
         total_price: data.total_price || 0,

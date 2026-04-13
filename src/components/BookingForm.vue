@@ -58,10 +58,42 @@
         <p class="price-note">* Inclusief weekend- en vakantietoeslagen waar van toepassing.</p>
       </div>
 
-      <button type="submit" :disabled="isSubmitting" class="neo-btn neo-btn-primary submit-btn">
+      <div class="form-group terms-group">
+        <label class="terms-label">
+          <input type="checkbox" v-model="termsAccepted" required />
+          <span class="terms-text">
+            Ik ga akkoord met de 
+            <button type="button" class="terms-link" @click="showTermsModal = true">
+              algemene voorwaarden
+            </button>
+          </span>
+        </label>
+      </div>
+      
+      <button type="submit" :disabled="isSubmitting || !termsAccepted" class="neo-btn neo-btn-primary submit-btn">
         <span v-if="isSubmitting" class="btn-spinner"></span>
         {{ isSubmitting ? 'Versturen...' : 'Aanvraag Versturen' }}
       </button>
+
+      <!-- Terms and Conditions Modal -->
+      <div v-if="showTermsModal" class="modal-overlay" @click="showTermsModal = false">
+        <div class="modal-content glass-panel animate-fade-in" @click.stop>
+          <div class="modal-header">
+            <h3>Algemene Voorwaarden</h3>
+            <button type="button" class="close-btn" @click="showTermsModal = false">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="terms-content">
+              {{ settings?.contract_text || 'Voorwaarden worden geladen...' }}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="neo-btn neo-btn-primary" @click="showTermsModal = false">Sluiten</button>
+          </div>
+        </div>
+      </div>
     </form>
   </div>
 </template>
@@ -87,6 +119,8 @@ const form = ref<BookingRequestData>({ ...initialFormState })
 const settings = ref<Settings | null>(null)
 const holidays = ref<HolidayPeriod[]>([])
 const isSubmitting = ref(false)
+const termsAccepted = ref(false)
+const showTermsModal = ref(false)
 const successMessage = ref('')
 const errorMessage = ref('')
 
@@ -155,6 +189,7 @@ const handleSubmit = async () => {
     })
     successMessage.value = 'Boekingsaanvraag verzonden. Bevestigingsmail verstuurd.'
     form.value = { ...initialFormState }
+    termsAccepted.value = false
   } catch (error: any) {
     errorMessage.value = error.message || 'Er is iets misgegaan. Probeer het opnieuw.'
     console.error(error)
@@ -319,5 +354,121 @@ label {
 .alert-error .alert-icon {
   background: var(--status-error);
   color: white;
+}
+
+/* Terms & Conditions Stylos */
+.terms-group {
+  margin-top: 0.5rem;
+}
+
+.terms-label {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.75rem;
+  cursor: pointer;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  color: var(--text-primary) !important;
+  letter-spacing: normal !important;
+}
+
+.terms-label input[type="checkbox"] {
+  width: 1.125rem;
+  height: 1.125rem;
+  accent-color: var(--accent-primary);
+  margin-top: 0.125rem;
+}
+
+.terms-text {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.terms-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.terms-link:hover {
+  opacity: 0.8;
+}
+
+/* Modal Stylos */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important; /* Reset padding to use internal sections */
+}
+
+.modal-header {
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.modal-body {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.terms-content {
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.modal-footer {
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--surface-border);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-radius: 50%;
+  display: flex;
+  transition: background 0.2s;
+}
+
+.close-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 </style>

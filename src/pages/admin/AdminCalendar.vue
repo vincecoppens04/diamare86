@@ -163,9 +163,15 @@
               {{ errorMsg }}
             </div>
             
-            <div class="form-group">
-              <label>Naam Gast</label>
-              <input class="neo-input" type="text" v-model="manualForm.guest_name" required placeholder="Bijv: Jan Janssen" />
+            <div class="form-row">
+              <div class="form-group">
+                <label>Naam Gast</label>
+                <input class="neo-input" type="text" v-model="manualForm.guest_name" required placeholder="Bijv: Jan Janssen" />
+              </div>
+              <div class="form-group">
+                <label>E-mailadres (Optioneel)</label>
+                <input class="neo-input" type="email" v-model="manualForm.guest_email" placeholder="u@voorbeeld.nl" />
+              </div>
             </div>
 
             <div class="form-row">
@@ -176,6 +182,13 @@
               <div class="form-group">
                 <label>Vertrek</label>
                 <input class="neo-input" type="date" v-model="manualForm.end_date" required />
+              </div>
+            </div>
+
+            <div v-if="manualTotalPrice > 0" class="price-summary animate-fade-in" style="margin-top: 1rem;">
+              <div class="price-row">
+                <span class="price-label">Totaalbedrag verblijf:</span>
+                <span class="price-value text-gradient">€{{ manualTotalPrice }}</span>
               </div>
             </div>
           </div>
@@ -295,7 +308,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import Calendar from '../../components/Calendar.vue'
 import { 
   getBookings, 
@@ -311,6 +324,8 @@ import {
   type Booking,
   type BlockedPeriod
 } from '../../services/calendarService'
+import { getSettings, type Settings } from '../../services/settingsService'
+import { getSchoolHolidays, isWeekendPriceDay, type HolidayPeriod } from '../../services/holidayService'
 
 const upcomingBookings = ref<Booking[]>([])
 const pastBookings = ref<Booking[]>([])
@@ -322,15 +337,26 @@ const selectedEvent = ref<any>(null)
 const isSubmitting = ref(false)
 const errorMsg = ref('')
 const successMsg = ref('')
+const settings = ref<Settings | null>(null)
+const holidays = ref<HolidayPeriod[]>([])
 
 const form = ref({ start_date: '', end_date: '', reason: '' })
-const manualForm = ref({ start_date: '', end_date: '', guest_name: '' })
+const manualForm = ref({ start_date: '', end_date: '', guest_name: '', guest_email: '', total_price: 0 })
 const manageForm = ref({ start_date: '', end_date: '', reason: '' })
 
 const fetchAll = async () => {
   loading.value = true
   try {
-    const [b, pb, bp] = await Promise.all([getBookings(), getPastBookings(), getBlockedPeriods()])
+    const [b, pb, bp, s, h] = await Promise.all([
+      getBookings(), 
+      getPastBookings(), 
+      getBlockedPeriods(),
+      getSettings(),
+      getSchoolHolidays(new Date().getFullYear())
+    ])
+    
+    settings.value = s
+    holidays.value = h
     
     // Sort into upcoming and past
     const todayStr = new Date().toISOString().split('T')[0]
@@ -371,9 +397,30 @@ const closeModal = () => {
 
 const closeManualModal = () => {
   showManualModal.value = false
-  manualForm.value = { start_date: '', end_date: '', guest_name: '' }
+  manualForm.value = { start_date: '', end_date: '', guest_name: '', guest_email: '', total_price: 0 }
   errorMsg.value = ''
 }
+
+const manualTotalPrice = computed(() => {
+  if (!manualForm.value.start_date || !manualForm.value.end_date || !settings.value) return 0
+  
+  const start = new Date(manualForm.value.start_date)
+  const end = new Date(manualForm.value.end_date)
+  
+  if (start >= end) return 0
+  
+  let total = 0
+  const current = new Date(start)
+  
+  while (current < end) {
+    const isWeekend = isWeekendPriceDay(current, holidays.value)
+    const nightPrice = isWeekend ? (settings.value.weekend_price || 0) : (settings.value.week_price || 0)
+    total += nightPrice
+    current.setDate(current.getDate() + 1)
+  }
+  
+  return total
+})
 
 const closeManageModal = () => {
   selectedEvent.value = null
@@ -423,7 +470,10 @@ const handleManualBooking = async () => {
       return
     }
 
-    await createBooking(manualForm.value)
+    await createBooking({
+      ...manualForm.value,
+      total_price: manualTotalPrice.value
+    })
     closeManualModal()
     successMsg.value = 'Manuele boeking succesvol toegevoegd!'
     setTimeout(() => { successMsg.value = '' }, 3000)
@@ -844,4 +894,30 @@ label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-tra
 }
 
 .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+
+/* Manual Price Summary */
+.price-summary {
+  margin: 1rem 0;
+  padding: 1.25rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-label {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.price-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
 </style>
