@@ -29,6 +29,12 @@ import BookingForm from '../components/BookingForm.vue'
   padding: 4rem 2rem;
 }
 
+@media (max-width: 768px) {
+  .calendar-page {
+    padding: 2rem 1rem;
+  }
+}
+
 .page-hero {
   text-align: center;
   margin-bottom: 3.5rem;

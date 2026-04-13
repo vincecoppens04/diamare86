@@ -204,6 +204,12 @@ const handleSubmit = async () => {
   padding: 2.5rem;
 }
 
+@media (max-width: 768px) {
+  .booking-form-container {
+    padding: 1.25rem;
+  }
+}
+
 .form-header {
   margin-bottom: 2rem;
 }
@@ -370,6 +376,7 @@ label {
   font-weight: 500 !important;
   color: var(--text-primary) !important;
   letter-spacing: normal !important;
+  flex-wrap: wrap; /* Ensure wrapping on mobile */
 }
 
 .terms-label input[type="checkbox"] {

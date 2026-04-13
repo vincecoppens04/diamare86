@@ -239,6 +239,12 @@ const calendarDays = computed(() => {
   border-radius: var(--radius-lg);
 }
 
+@media (max-width: 768px) {
+  .calendar-container {
+    padding: 1.25rem;
+  }
+}
+
 .cal-header {
   display: flex;
   flex-direction: column;
@@ -308,6 +314,15 @@ const calendarDays = computed(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .cal-legend {
+    gap: 0.75rem;
+  }
+  .legend-item {
+    font-size: 0.75rem;
+  }
 }
 
 .legend-item {
@@ -407,6 +422,13 @@ const calendarDays = computed(() => {
   font-weight: 700;
   color: var(--text-muted);
   z-index: 2;
+}
+
+@media (max-width: 480px) {
+  .day-number { font-size: 0.85rem; }
+  .day-price { font-size: 0.55rem; }
+  .day-cell { padding: 0.25rem; }
+  .weekday { padding: 0.75rem 0.25rem; font-size: 0.65rem; }
 }
 
 .padding-day {
