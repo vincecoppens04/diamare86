@@ -202,6 +202,7 @@ const handleSubmit = async () => {
 <style scoped>
 .booking-form-container {
   padding: 2.5rem;
+  overflow: hidden; /* Prevent horizontal scroll triggers */
 }
 
 @media (max-width: 768px) {
@@ -234,6 +235,15 @@ const handleSubmit = async () => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.neo-input {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
 }
 
 .form-row {
@@ -246,6 +256,11 @@ const handleSubmit = async () => {
   .form-row {
     display: flex;
     flex-direction: column;
+  }
+  
+  .neo-input {
+    font-size: 0.85rem !important;
+    padding: 0.8rem 0.75rem !important;
   }
 }
 
