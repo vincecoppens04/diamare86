@@ -244,7 +244,8 @@ const handleSubmit = async () => {
 
 @media (max-width: 480px) {
   .form-row {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
   }
 }
 
