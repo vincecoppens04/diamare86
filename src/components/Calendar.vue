@@ -245,6 +245,12 @@ const calendarDays = computed(() => {
   }
 }
 
+@media (max-width: 480px) {
+  .calendar-container {
+    padding: 0.75rem;
+  }
+}
+
 .cal-header {
   display: flex;
   flex-direction: column;
@@ -271,6 +277,11 @@ const calendarDays = computed(() => {
   margin: 0;
   font-weight: 800;
   letter-spacing: -0.02em;
+}
+
+@media (max-width: 640px) {
+  .cal-title { gap: 0.75rem; }
+  .cal-title h2 { font-size: 1.25rem; }
 }
 
 .cal-nav {
@@ -362,7 +373,7 @@ const calendarDays = computed(() => {
 
 .weekdays-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   background: white;
   border-bottom: 1px solid var(--surface-border);
 }
@@ -379,7 +390,7 @@ const calendarDays = computed(() => {
 
 .days-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
 .day-cell {
@@ -425,10 +436,15 @@ const calendarDays = computed(() => {
 }
 
 @media (max-width: 480px) {
-  .day-number { font-size: 0.85rem; }
-  .day-price { font-size: 0.55rem; }
-  .day-cell { padding: 0.25rem; }
-  .weekday { padding: 0.75rem 0.25rem; font-size: 0.65rem; }
+  .day-number { font-size: 0.8rem; }
+  .day-price { font-size: 0.5rem; }
+  .day-cell { padding: 0.125rem; min-width: 0; }
+  .weekday { padding: 0.5rem 0.125rem; font-size: 0.6rem; }
+}
+
+@media (max-width: 380px) {
+  .day-number { font-size: 0.75rem; }
+  .day-price { display: none; } /* Hide price on ultra-small screens to save space */
 }
 
 .padding-day {
