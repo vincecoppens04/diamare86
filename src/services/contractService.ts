@@ -38,13 +38,13 @@ export const generateContractPDF = (request: BookingRequest, template: string): 
 
   // Multiline support for the content
   const splitText = doc.splitTextToSize(content, 170)
-  doc.text(splitText, 20, 40)
+  doc.text(splitText, 20, 30)
 
   // Footer / Signature placeholders
   const pageHeight = doc.internal.pageSize.height
   doc.setFontSize(10)
   doc.text('_______________________', 20, pageHeight - 40)
-  doc.text('Datum: ' + new Date().toLocaleDateString('nl-NL'), 20, pageHeight - 15)
+  doc.text('Datum: ' + new Date().toLocaleDateString('nl-NL'), 20, pageHeight - 10)
 
 
   // Return as Blob for storage upload
